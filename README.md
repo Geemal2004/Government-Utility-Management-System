@@ -49,6 +49,7 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 ## Tech Stack
 
 ### Backend
+
 - **Framework:** NestJS 10
 - **Language:** TypeScript
 - **ORM:** TypeORM
@@ -57,6 +58,7 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 - **Documentation:** Swagger/OpenAPI
 
 ### Frontend
+
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
@@ -67,7 +69,8 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - Microsoft SQL Server
 - npm or yarn
 
@@ -76,6 +79,7 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 1. Create a new database called `UtilityManagementDB` in SQL Server
 
 2. Run the schema script:
+
    ```sql
    -- Execute schema.sql in SQL Server Management Studio
    ```
@@ -88,27 +92,30 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 ### Backend Setup
 
 1. Navigate to the backend directory:
+
    ```bash
    cd backend
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Configure environment variables in `.env`:
+
    ```env
    # For Windows Authentication
    DB_HOST=localhost
    DB_PORT=1433
    DB_DATABASE=UtilityManagementDB
    DB_TRUST_SERVER_CERTIFICATE=true
-   
+
    # For SQL Server Authentication (uncomment and set)
    # DB_USERNAME=your_username
    # DB_PASSWORD=your_password
-   
+
    JWT_SECRET=your-super-secret-jwt-key-change-in-production
    JWT_EXPIRES_IN=8h
    PORT=3001
@@ -116,6 +123,7 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
    ```
 
 4. Start the development server:
+
    ```bash
    npm run start:dev
    ```
@@ -125,21 +133,25 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 ### Frontend Setup
 
 1. Navigate to the frontend directory:
+
    ```bash
    cd frontend
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Configure environment variables in `.env.local`:
+
    ```env
    NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
    ```
 
 4. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -151,20 +163,22 @@ GOVERNMENT UTILITY MANAGEMENT SYSTEM/
 After running the seed script, you can login with these accounts:
 
 | Username     | Password    | Role         |
-|-------------|-------------|--------------|
-| admin       | password123 | Admin        |
-| manager     | password123 | Manager      |
-| cashier     | password123 | Cashier      |
-| fieldofficer| password123 | FieldOfficer |
-| meterreader | password123 | MeterReader  |
+| ------------ | ----------- | ------------ |
+| admin        | password123 | Admin        |
+| manager      | password123 | Manager      |
+| cashier      | password123 | Cashier      |
+| fieldofficer | password123 | FieldOfficer |
+| meterreader  | password123 | MeterReader  |
 
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/v1/auth/login` - Employee login
 - `GET /api/v1/auth/profile` - Get current user profile
 
 ### Employees
+
 - `GET /api/v1/employees` - List all employees (paginated)
 - `GET /api/v1/employees/:id` - Get employee by ID
 

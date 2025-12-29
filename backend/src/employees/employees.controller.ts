@@ -21,7 +21,12 @@ export class EmployeesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all employees (paginated)' })
-  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (default: 1)',
+  })
   @ApiQuery({
     name: 'limit',
     required: false,
@@ -36,7 +41,9 @@ export class EmployeesController {
   async findAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-  ): Promise<ApiResponseDto<{ data: EmployeeResponseDto[]; total: number; page: number; limit: number }>> {
+  ): Promise<
+    ApiResponseDto<{ data: EmployeeResponseDto[]; total: number; page: number; limit: number }>
+  > {
     const result = await this.employeesService.findAll(page, limit);
     return {
       success: true,
@@ -56,7 +63,9 @@ export class EmployeesController {
   @ApiResponse({ status: 200, description: 'Employee found' })
   @ApiResponse({ status: 404, description: 'Employee not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ApiResponseDto<EmployeeResponseDto>> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ApiResponseDto<EmployeeResponseDto>> {
     const employee = await this.employeesService.findByIdOrFail(id);
     return {
       success: true,

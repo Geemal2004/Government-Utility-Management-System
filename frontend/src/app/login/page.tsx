@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useRouter } from 'next/navigation';
-import { Zap, Droplets, Flame, Eye, EyeOff, Loader2 } from 'lucide-react';
-import authApi from '@/lib/auth-api';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { Zap, Droplets, Flame, Eye, EyeOff, Loader2 } from "lucide-react";
+import authApi from "@/lib/auth-api";
 
 // Form validation schema
 const loginSchema = z.object({
-  usernameOrEmail: z.string().min(1, 'Username or email is required'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  usernameOrEmail: z.string().min(1, "Username or email is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -36,9 +36,12 @@ export default function LoginPage() {
 
     try {
       await authApi.login(data);
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (err: any) {
-      const message = err.response?.data?.message || err.message || 'Login failed. Please try again.';
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed. Please try again.";
       setError(message);
     } finally {
       setIsLoading(false);
@@ -64,9 +67,12 @@ export default function LoginPage() {
               <Droplets className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">Water Management</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Water Management
+              </h3>
               <p className="text-sm text-primary-100">
-                Track water consumption, manage billing, and monitor distribution networks
+                Track water consumption, manage billing, and monitor
+                distribution networks
               </p>
             </div>
           </div>
@@ -76,9 +82,12 @@ export default function LoginPage() {
               <Zap className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">Electricity Management</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Electricity Management
+              </h3>
               <p className="text-sm text-primary-100">
-                Monitor power consumption, handle meter readings, and process payments
+                Monitor power consumption, handle meter readings, and process
+                payments
               </p>
             </div>
           </div>
@@ -88,9 +97,12 @@ export default function LoginPage() {
               <Flame className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">Gas Management</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Gas Management
+              </h3>
               <p className="text-sm text-primary-100">
-                Oversee gas distribution, track usage, and manage service connections
+                Oversee gas distribution, track usage, and manage service
+                connections
               </p>
             </div>
           </div>
@@ -109,9 +121,7 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold text-gray-900">
               Utility Management System
             </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Employee Portal
-            </p>
+            <p className="mt-1 text-sm text-gray-600">Employee Portal</p>
           </div>
 
           <div className="card">
@@ -141,9 +151,11 @@ export default function LoginPage() {
                     id="usernameOrEmail"
                     type="text"
                     autoComplete="username"
-                    className={`input ${errors.usernameOrEmail ? 'input-error' : ''}`}
+                    className={`input ${
+                      errors.usernameOrEmail ? "input-error" : ""
+                    }`}
                     placeholder="Enter your username or email"
-                    {...register('usernameOrEmail')}
+                    {...register("usernameOrEmail")}
                   />
                   {errors.usernameOrEmail && (
                     <p className="mt-1 text-sm text-red-600">
@@ -160,11 +172,13 @@ export default function LoginPage() {
                   <div className="relative">
                     <input
                       id="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
-                      className={`input pr-10 ${errors.password ? 'input-error' : ''}`}
+                      className={`input pr-10 ${
+                        errors.password ? "input-error" : ""
+                      }`}
                       placeholder="Enter your password"
-                      {...register('password')}
+                      {...register("password")}
                     />
                     <button
                       type="button"
@@ -197,7 +211,7 @@ export default function LoginPage() {
                       Signing in...
                     </>
                   ) : (
-                    'Sign In'
+                    "Sign In"
                   )}
                 </button>
               </form>
@@ -206,8 +220,11 @@ export default function LoginPage() {
 
           {/* Help Text */}
           <p className="mt-6 text-center text-sm text-gray-600">
-            Having trouble signing in?{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+            Having trouble signing in?{" "}
+            <a
+              href="#"
+              className="text-primary-600 hover:text-primary-700 font-medium"
+            >
               Contact IT Support
             </a>
           </p>

@@ -8,6 +8,8 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+export * from './customer';
+
 /**
  * Paginated response type
  */

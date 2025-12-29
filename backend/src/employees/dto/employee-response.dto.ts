@@ -38,7 +38,11 @@ export class EmployeeResponseDto {
   @ApiProperty({ description: 'Username for login', example: 'johndoe' })
   username: string;
 
-  @ApiProperty({ description: 'Last login timestamp', example: '2024-01-15T10:30:00Z', nullable: true })
+  @ApiProperty({
+    description: 'Last login timestamp',
+    example: '2024-01-15T10:30:00Z',
+    nullable: true,
+  })
   lastLoginAt: Date | null;
 
   /**

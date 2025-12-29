@@ -1,9 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { Bell, Search, User, LogOut, Settings, ChevronDown } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context';
-import { cn } from '@/lib/utils';
+import { useState, useRef, useEffect } from "react";
+import {
+  Bell,
+  Search,
+  User,
+  LogOut,
+  Settings,
+  ChevronDown,
+} from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const { employee, logout } = useAuth();
@@ -13,13 +20,16 @@ export function Header() {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
         setIsProfileOpen(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -56,14 +66,16 @@ export function Header() {
               </div>
               <div className="hidden md:block text-left">
                 <p className="text-sm font-medium text-gray-900">
-                  {employee?.fullName || 'User'}
+                  {employee?.fullName || "User"}
                 </p>
-                <p className="text-xs text-gray-500">{employee?.role || 'Role'}</p>
+                <p className="text-xs text-gray-500">
+                  {employee?.role || "Role"}
+                </p>
               </div>
               <ChevronDown
                 className={cn(
-                  'h-4 w-4 text-gray-400 transition-transform',
-                  isProfileOpen && 'transform rotate-180'
+                  "h-4 w-4 text-gray-400 transition-transform",
+                  isProfileOpen && "transform rotate-180"
                 )}
               />
             </button>
@@ -75,7 +87,9 @@ export function Header() {
                   <p className="text-sm font-medium text-gray-900">
                     {employee?.fullName}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">{employee?.email}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {employee?.email}
+                  </p>
                 </div>
 
                 <div className="py-1">

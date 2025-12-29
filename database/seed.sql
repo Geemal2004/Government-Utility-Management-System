@@ -84,7 +84,7 @@ BEGIN
         2,
         'john.smith@utility.gov',
         'manager',
-        '$2b$10$rPqG3K7YFOqCkjKB6WcJd.VD4gPkPjXHfDlVYEYdWPNXuHJSfWKpC'  -- password123
+        '$2b$10$CDcKKre4IsSoQwtNJxpQmuNvd7P1WDm9hwyG4qKEKnA6sXp6VuqXi'  -- password123
     );
     PRINT 'Manager user created successfully';
 END
@@ -113,7 +113,7 @@ BEGIN
         4,
         'sarah.johnson@utility.gov',
         'cashier',
-        '$2b$10$rPqG3K7YFOqCkjKB6WcJd.VD4gPkPjXHfDlVYEYdWPNXuHJSfWKpC'  -- password123
+        '$2b$10$CDcKKre4IsSoQwtNJxpQmuNvd7P1WDm9hwyG4qKEKnA6sXp6VuqXi'  -- password123
     );
     PRINT 'Cashier user created successfully';
 END
@@ -142,7 +142,7 @@ BEGIN
         5,
         'robert.williams@utility.gov',
         'fieldofficer',
-        '$2b$10$rPqG3K7YFOqCkjKB6WcJd.VD4gPkPjXHfDlVYEYdWPNXuHJSfWKpC'  -- password123
+        '$2b$10$CDcKKre4IsSoQwtNJxpQmuNvd7P1WDm9hwyG4qKEKnA6sXp6VuqXi'  -- password123
     );
     PRINT 'Field Officer user created successfully';
 END
@@ -171,7 +171,7 @@ BEGIN
         5,
         'emily.davis@utility.gov',
         'meterreader',
-        '$2b$10$rPqG3K7YFOqCkjKB6WcJd.VD4gPkPjXHfDlVYEYdWPNXuHJSfWKpC'  -- password123
+        '$2b$10$CDcKKre4IsSoQwtNJxpQmuNvd7P1WDm9hwyG4qKEKnA6sXp6VuqXi'  -- password123
     );
     PRINT 'Meter Reader user created successfully';
 END
