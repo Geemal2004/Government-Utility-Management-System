@@ -7,6 +7,7 @@ import { CustomersModule } from './customers/customers.module';
 import { ConnectionsModule } from './connections/connections.module';
 import { LookupModule } from './lookup/lookup.module';
 import { DatabaseModule } from './database/database.module';
+import { ReadingsModule } from './readings/readings.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { DatabaseModule } from './database/database.module';
     CustomersModule,
     ConnectionsModule,
     LookupModule,
+    ReadingsModule,
   ],
 })
 export class AppModule {}

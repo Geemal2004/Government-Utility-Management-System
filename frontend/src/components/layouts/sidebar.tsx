@@ -32,6 +32,7 @@ const navigation: NavItem[] = [
   { name: 'Customers', href: '/dashboard/customers', icon: Users },
   { name: 'Connections', href: '/dashboard/connections', icon: Cable },
   { name: 'Meters', href: '/dashboard/meters', icon: Gauge },
+  { name: 'Readings', href: '/dashboard/readings', icon: Gauge },
   { name: 'Billing', href: '/dashboard/billing', icon: FileText },
   { name: 'Payments', href: '/dashboard/payments', icon: CreditCard },
   { name: 'Work Orders', href: '/dashboard/work-orders', icon: Wrench },

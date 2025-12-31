@@ -73,6 +73,14 @@ export const lookupApi = {
   },
 
   /**
+   * Get a specific meter by ID with full details
+   */
+  async getMeterById(meterId: number): Promise<ApiResponse<Meter>> {
+    const response = await apiClient.get(`/lookup/meters/${meterId}`);
+    return response.data;
+  },
+
+  /**
    * Get geographic areas
    */
   async getGeoAreas(): Promise<ApiResponse<GeoArea[]>> {

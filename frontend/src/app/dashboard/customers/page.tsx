@@ -51,14 +51,45 @@ export default function CustomersPage() {
 
       const response = await customersApi.getAll(params);
 
-      if (response.success) {
-        setCustomers(response.data.items);
-        setMeta(response.data.meta);
+      console.log('Customers API response:', response);
+      console.log('Response success:', response.success);
+      console.log('Response data:', response.data);
+
+      if (response.success && response.data) {
+        // Handle different response structures
+        let items: Customer[] = [];
+        let metaData = null;
+
+        if (Array.isArray(response.data)) {
+          // Direct array response
+          items = response.data;
+        } else if (response.data.items) {
+          // Paginated response with items
+          items = response.data.items;
+          metaData = response.data.meta;
+        } else if (response.data.data) {
+          // Double nested data
+          if (Array.isArray(response.data.data)) {
+            items = response.data.data;
+          } else if (response.data.data.items) {
+            items = response.data.data.items;
+            metaData = response.data.data.meta;
+          }
+        }
+
+        console.log('Setting customers:', items);
+        console.log('Setting meta:', metaData);
+
+        setCustomers(items);
+        setMeta(metaData || { total: items.length, page, limit });
       } else {
         setError(response.error || 'Failed to fetch customers');
+        setCustomers([]);
       }
     } catch (err: any) {
+      console.error('Fetch customers error:', err);
       setError(err.response?.data?.message || 'Failed to fetch customers');
+      setCustomers([]);
     } finally {
       setLoading(false);
     }
@@ -194,7 +225,7 @@ export default function CustomersPage() {
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
           <span className="ml-3 text-gray-600">Loading customers...</span>
         </div>
-      ) : customers.length === 0 ? (
+      ) : !customers || customers.length === 0 ? (
         /* Empty State */
         <div className="bg-white rounded-lg shadow p-8 text-center">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />

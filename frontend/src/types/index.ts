@@ -10,6 +10,7 @@ export interface ApiResponse<T> {
 
 export * from "./customer";
 export * from "./connection";
+export * from "./reading";
 
 /**
  * Paginated response type

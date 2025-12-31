@@ -55,13 +55,14 @@ apiClient.interceptors.response.use(
  * Set auth token
  */
 export const setAuthToken = (token: string): void => {
-  console.log('Setting auth token:', token.substring(0, 20) + '...');
+  console.log('Setting auth token:', token ? token.substring(0, 20) + '...' : 'No token');
   Cookies.set(TOKEN_KEY, token, { 
     expires: 1, // 1 day
     path: '/',
     sameSite: 'lax'
   });
-  console.log('Cookie set. Verifying:', Cookies.get(TOKEN_KEY)?.substring(0, 20) + '...');
+  const verifyToken = Cookies.get(TOKEN_KEY);
+  console.log('Cookie set. Verifying:', verifyToken ? verifyToken.substring(0, 20) + '...' : 'No token');
 };
 
 /**

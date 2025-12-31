@@ -11,12 +11,16 @@ export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post<ApiResponse<LoginResponse>>('/auth/login', credentials);
     
-    if (response.data.success && response.data.data) {
+    console.log('Login response:', response.data);
+    console.log('Login data:', response.data.data);
+    console.log('Access token:', response.data.data?.accessToken);
+    
+    if (response.data.success && response.data.data?.accessToken) {
       setAuthToken(response.data.data.accessToken);
       return response.data.data;
     }
     
-    throw new Error(response.data.message || 'Login failed');
+    throw new Error('Login failed - no access token received');
   },
 
   /**

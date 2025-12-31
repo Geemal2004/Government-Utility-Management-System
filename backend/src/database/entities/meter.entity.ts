@@ -1,5 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  Index,
+} from 'typeorm';
 import { UtilityType } from './utility-type.entity';
+import { MeterReading } from './meter-reading.entity';
 
 /**
  * Meter status enum
@@ -46,4 +55,11 @@ export class Meter {
   @ManyToOne(() => UtilityType)
   @JoinColumn({ name: 'utility_type_id' })
   utilityType: UtilityType;
+
+  /**
+   * One-to-many relation with MeterReading
+   * All readings recorded for this meter
+   */
+  @OneToMany(() => MeterReading, (reading) => reading.meter)
+  readings: MeterReading[];
 }
