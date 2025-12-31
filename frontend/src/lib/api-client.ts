@@ -21,8 +21,11 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = Cookies.get(TOKEN_KEY);
+    console.log('API Request:', config.url);
+    console.log('Token found:', token ? `${token.substring(0, 20)}...` : 'No token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Authorization header set');
     }
     return config;
   },
@@ -52,7 +55,13 @@ apiClient.interceptors.response.use(
  * Set auth token
  */
 export const setAuthToken = (token: string): void => {
-  Cookies.set(TOKEN_KEY, token, { expires: 1 }); // 1 day
+  console.log('Setting auth token:', token.substring(0, 20) + '...');
+  Cookies.set(TOKEN_KEY, token, { 
+    expires: 1, // 1 day
+    path: '/',
+    sameSite: 'lax'
+  });
+  console.log('Cookie set. Verifying:', Cookies.get(TOKEN_KEY)?.substring(0, 20) + '...');
 };
 
 /**

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,9 @@ async function bootstrap() {
       },
     }),
   );
+
+  // Global response transformer - wraps all responses in { success: true, data: ... }
+  app.useGlobalInterceptors(new TransformResponseInterceptor());
 
   // Swagger documentation setup
   const config = new DocumentBuilder()
