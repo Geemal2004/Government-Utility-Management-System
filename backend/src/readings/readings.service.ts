@@ -1,4 +1,11 @@
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { MeterReading, ReadingSource } from '../database/entities/meter-reading.entity';
@@ -15,6 +22,7 @@ import {
   SortOrder,
 } from './dto';
 import { PaginatedResponseDto } from '../common/dto/pagination.dto';
+import { BillingService } from '../billing/billing.service';
 
 /**
  * Service for managing meter readings
@@ -37,6 +45,8 @@ export class ReadingsService {
     @InjectRepository(MeterReader)
     private meterReaderRepository: Repository<MeterReader>,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => BillingService))
+    private billingService: BillingService,
   ) {}
 
   // ==================== FIND METHODS ====================
@@ -191,11 +201,21 @@ export class ReadingsService {
 
   /**
    * Create a new meter reading
+   * @param createDto - Reading data
+   * @param meterReaderId - Optional meter reader ID
+   * @param options - Additional options including auto-bill generation
    */
   async create(
     createDto: CreateMeterReadingDto,
     meterReaderId?: number,
-  ): Promise<MeterReadingResponseDto> {
+    options?: {
+      autoGenerateBill?: boolean;
+      minDaysBetweenBills?: number;
+      dueDaysFromBillDate?: number;
+    },
+  ): Promise<
+    MeterReadingResponseDto & { generatedBill?: { billId: number; totalAmount: number } }
+  > {
     // Verify meter exists
     const meter = await this.meterRepository.findOne({
       where: { meterId: createDto.meterId },
@@ -251,7 +271,53 @@ export class ReadingsService {
 
     this.logger.log(`Created reading ${savedReading.readingId} for meter ${createDto.meterId}`);
 
-    return this.findOne(savedReading.readingId);
+    const readingResponse = await this.findOne(savedReading.readingId);
+
+    // Auto-generate bill if enabled (default: true)
+    const shouldAutoGenerateBill = options?.autoGenerateBill !== false;
+    let generatedBill: { billId: number; totalAmount: number } | undefined;
+
+    this.logger.log(
+      `Auto-generation check: shouldAutoGenerateBill=${shouldAutoGenerateBill}, options=${JSON.stringify(options)}`,
+    );
+
+    if (shouldAutoGenerateBill) {
+      try {
+        this.logger.log(`Attempting to generate bill for meter ${createDto.meterId}...`);
+        const bill = await this.billingService.generateBillFromReading(
+          createDto.meterId,
+          new Date(createDto.readingDate),
+          {
+            minDaysBetweenBills: options?.minDaysBetweenBills,
+            dueDaysFromBillDate: options?.dueDaysFromBillDate,
+          },
+        );
+
+        if (bill) {
+          generatedBill = {
+            billId: bill.billId,
+            totalAmount: bill.getTotalAmount(),
+          };
+          this.logger.log(
+            `✅ Auto-generated bill ${bill.billId} for meter ${createDto.meterId} after reading ${savedReading.readingId}. Amount: ${bill.getTotalAmount()}`,
+          );
+        } else {
+          this.logger.warn(
+            `⚠️ Bill generation returned null for meter ${createDto.meterId}. Check eligibility criteria.`,
+          );
+        }
+      } catch (error) {
+        // Log error but don't fail the reading creation
+        this.logger.error(
+          `❌ Failed to auto-generate bill for meter ${createDto.meterId}: ${error.message}`,
+        );
+        this.logger.error(error.stack);
+      }
+    } else {
+      this.logger.log(`Auto-generation disabled for meter ${createDto.meterId}`);
+    }
+
+    return { ...readingResponse, generatedBill };
   }
 
   /**

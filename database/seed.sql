@@ -519,6 +519,306 @@ END
 GO
 
 -- =====================
+-- TARIFF SLABS
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.TariffSlab)
+BEGIN
+    SET IDENTITY_INSERT dbo.TariffSlab ON;
+    
+    -- Residential Standard Tariff Slabs (tariff_category_id = 1)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (1, 1, 0.000, 60.000, 7.8500, 100.00, NULL, '2024-01-01', NULL),
+    (2, 1, 60.001, 90.000, 10.0000, 100.00, NULL, '2024-01-01', NULL),
+    (3, 1, 90.001, 120.000, 27.7500, 100.00, NULL, '2024-01-01', NULL),
+    (4, 1, 120.001, 180.000, 32.0000, 100.00, NULL, '2024-01-01', NULL),
+    (5, 1, 180.001, NULL, 45.0000, 100.00, NULL, '2024-01-01', NULL),
+    
+    -- Residential Low Income Tariff Slabs (tariff_category_id = 2) - Subsidized rates
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (6, 2, 0.000, 60.000, 2.5000, 50.00, NULL, '2024-01-01', NULL),
+    (7, 2, 60.001, 90.000, 6.0000, 50.00, NULL, '2024-01-01', NULL),
+    (8, 2, 90.001, NULL, 10.0000, 50.00, NULL, '2024-01-01', NULL),
+    
+    -- Commercial Small Tariff Slabs (tariff_category_id = 3)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (9, 3, 0.000, 300.000, 21.0000, 300.00, NULL, '2024-01-01', NULL),
+    (10, 3, 300.001, NULL, 25.0000, 300.00, NULL, '2024-01-01', NULL),
+    
+    -- Commercial Large Tariff Slabs (tariff_category_id = 4)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (11, 4, 0.000, 1000.000, 28.0000, 1000.00, NULL, '2024-01-01', NULL),
+    (12, 4, 1000.001, NULL, 32.0000, 1000.00, NULL, '2024-01-01', NULL),
+    
+    -- Industrial Tariff (tariff_category_id = 5) - Flat rate
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (13, 5, 0.000, NULL, 18.5000, 2000.00, NULL, '2024-01-01', NULL),
+    
+    -- Water Residential Tariff Slabs (tariff_category_id = 6)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (14, 6, 0.000, 10.000, 15.0000, 50.00, NULL, '2024-01-01', NULL),
+    (15, 6, 10.001, 20.000, 35.0000, 50.00, NULL, '2024-01-01', NULL),
+    (16, 6, 20.001, NULL, 85.0000, 50.00, NULL, '2024-01-01', NULL),
+    
+    -- Water Commercial Tariff Slabs (tariff_category_id = 7)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (17, 7, 0.000, 50.000, 45.0000, 200.00, NULL, '2024-01-01', NULL),
+    (18, 7, 50.001, NULL, 95.0000, 200.00, NULL, '2024-01-01', NULL),
+    
+    -- Gas Residential Tariff Slabs (tariff_category_id = 8)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (19, 8, 0.000, 100.000, 75.0000, 150.00, NULL, '2024-01-01', NULL),
+    (20, 8, 100.001, NULL, 95.0000, 150.00, NULL, '2024-01-01', NULL),
+    
+    -- Gas Commercial Tariff Slabs (tariff_category_id = 9)
+    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    (21, 9, 0.000, 500.000, 85.0000, 500.00, NULL, '2024-01-01', NULL),
+    (22, 9, 500.001, NULL, 105.0000, 500.00, NULL, '2024-01-01', NULL);
+    
+    SET IDENTITY_INSERT dbo.TariffSlab OFF;
+    PRINT 'Tariff slabs created successfully';
+END
+GO
+
+-- =====================
+-- TAX CONFIGURATION
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.TaxConfig)
+BEGIN
+    SET IDENTITY_INSERT dbo.TaxConfig ON;
+    
+    INSERT INTO dbo.TaxConfig (tax_id, tax_name, rate_percent, effective_from, effective_to, status) VALUES
+    (1, 'VAT (Value Added Tax)', 15.000, '2024-01-01', NULL, 'ACTIVE'),
+    (2, 'Environmental Levy', 2.500, '2024-01-01', NULL, 'ACTIVE'),
+    (3, 'Service Tax', 1.000, '2024-01-01', NULL, 'ACTIVE'),
+    (4, 'Old VAT Rate', 12.000, '2023-01-01', '2023-12-31', 'INACTIVE');
+    
+    SET IDENTITY_INSERT dbo.TaxConfig OFF;
+    PRINT 'Tax configurations created successfully';
+END
+GO
+
+-- =====================
+-- SERVICE CONNECTIONS
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.ServiceConnection)
+BEGIN
+    SET IDENTITY_INSERT dbo.ServiceConnection ON;
+    
+    -- Electricity Service Connections (utility_type_id = 1)
+    -- Residential Standard Tariff (tariff_category_id = 1)
+    INSERT INTO dbo.ServiceConnection (connection_id, customer_id, utility_type_id, tariff_category_id, meter_id, connection_status, connection_address_id) VALUES
+    (1, 1, 1, 1, 1, 'ACTIVE', 1),
+    (2, 2, 1, 1, 2, 'ACTIVE', 2),
+    (3, 3, 1, 1, 3, 'ACTIVE', 3),
+    (4, 4, 1, 1, 4, 'ACTIVE', 4),
+    (5, 5, 1, 1, 5, 'ACTIVE', 5),
+    
+    -- Commercial Small Tariff (tariff_category_id = 3)
+    (6, 6, 1, 3, 6, 'ACTIVE', 6),
+    (7, 8, 1, 3, 8, 'ACTIVE', 8),
+    
+    -- Commercial Large Tariff (tariff_category_id = 4)
+    (8, 7, 1, 4, 7, 'ACTIVE', 7),
+    
+    -- Industrial Tariff (tariff_category_id = 5)
+    (9, 9, 1, 5, 9, 'ACTIVE', 9),
+    
+    -- Government (using Residential Standard for simplicity)
+    (10, 10, 1, 1, 10, 'ACTIVE', 10),
+    
+    -- Additional connections for testing
+    (11, 1, 1, 1, 13, 'ACTIVE', 1),
+    (12, 2, 1, 1, 14, 'ACTIVE', 2),
+    (13, 3, 1, 1, 15, 'ACTIVE', 3),
+    
+    -- Water Service Connections (utility_type_id = 2, tariff_category_id = 6)
+    (14, 1, 2, 6, 16, 'ACTIVE', 1),
+    (15, 2, 2, 6, 17, 'ACTIVE', 2),
+    (16, 3, 2, 6, 18, 'ACTIVE', 3),
+    (17, 4, 2, 6, 19, 'ACTIVE', 4),
+    (18, 5, 2, 6, 20, 'ACTIVE', 5),
+    
+    -- Water Commercial (tariff_category_id = 7)
+    (19, 6, 2, 7, 21, 'ACTIVE', 6),
+    (20, 7, 2, 7, 23, 'ACTIVE', 7),
+    (21, 8, 2, 7, 24, 'ACTIVE', 8),
+    (22, 9, 2, 7, 25, 'ACTIVE', 9),
+    
+    -- Gas Service Connections (utility_type_id = 3, tariff_category_id = 8)
+    (23, 1, 3, 8, 26, 'ACTIVE', 1),
+    (24, 2, 3, 8, 27, 'ACTIVE', 2),
+    (25, 3, 3, 8, 28, 'ACTIVE', 3),
+    (26, 4, 3, 8, 29, 'ACTIVE', 4),
+    (27, 5, 3, 8, 30, 'ACTIVE', 5),
+    
+    -- Gas Commercial (tariff_category_id = 9)
+    (28, 6, 3, 9, 32, 'ACTIVE', 6),
+    (29, 7, 3, 9, 33, 'ACTIVE', 7),
+    (30, 8, 3, 9, 34, 'ACTIVE', 8),
+    (31, 9, 3, 9, 35, 'ACTIVE', 9);
+    
+    SET IDENTITY_INSERT dbo.ServiceConnection OFF;
+    PRINT 'Service connections created successfully';
+END
+GO
+
+-- =====================
+-- METER READINGS
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.MeterReading)
+BEGIN
+    SET IDENTITY_INSERT dbo.MeterReading ON;
+    
+    -- Meter Readings for ELEC-001-2024 (meter_id = 1) - 150 units consumption per month
+    INSERT INTO dbo.MeterReading (reading_id, meter_id, reading_date, import_reading, export_reading, reading_source, meter_reader_id) VALUES
+    -- December 2023
+    (1, 1, '2023-12-01', 1000.000, 0.000, 'MANUAL', 5),
+    -- January 2024 (150 units)
+    (2, 1, '2024-01-01', 1150.000, 0.000, 'MANUAL', 5),
+    -- February 2024 (150 units)
+    (3, 1, '2024-02-01', 1300.000, 0.000, 'MANUAL', 5),
+    -- March 2024 (150 units)
+    (4, 1, '2024-03-01', 1450.000, 0.000, 'MANUAL', 5),
+    -- April 2024 (150 units)
+    (5, 1, '2024-04-01', 1600.000, 0.000, 'MANUAL', 5),
+    -- May 2024 (150 units)
+    (6, 1, '2024-05-01', 1750.000, 0.000, 'MANUAL', 5),
+    -- June 2024 (150 units)
+    (7, 1, '2024-06-01', 1900.000, 0.000, 'MANUAL', 5),
+    
+    -- Meter Readings for ELEC-002-2024 (meter_id = 2) - 200 units consumption per month
+    (8, 2, '2024-01-20', 500.000, 0.000, 'MANUAL', 5),
+    (9, 2, '2024-02-20', 700.000, 0.000, 'MANUAL', 5),
+    (10, 2, '2024-03-20', 900.000, 0.000, 'MANUAL', 5),
+    (11, 2, '2024-04-20', 1100.000, 0.000, 'MANUAL', 5),
+    (12, 2, '2024-05-20', 1300.000, 0.000, 'MANUAL', 5),
+    
+    -- Meter Readings for ELEC-003-2024 (meter_id = 3) - 80 units consumption per month
+    (13, 3, '2024-02-10', 1000.000, 0.000, 'SMART', NULL),
+    (14, 3, '2024-03-10', 1080.000, 0.000, 'SMART', NULL),
+    (15, 3, '2024-04-10', 1160.000, 0.000, 'SMART', NULL),
+    (16, 3, '2024-05-10', 1240.000, 0.000, 'SMART', NULL),
+    
+    -- Meter Readings for ELEC-004-2024 (meter_id = 4) - 120 units consumption per month
+    (17, 4, '2024-03-05', 2000.000, 0.000, 'MANUAL', 5),
+    (18, 4, '2024-04-05', 2120.000, 0.000, 'MANUAL', 5),
+    (19, 4, '2024-05-05', 2240.000, 0.000, 'MANUAL', 5),
+    
+    -- Meter Readings for ELEC-005-2024 (meter_id = 5) - 50 units consumption with solar export
+    (20, 5, '2024-04-12', 3000.000, 0.000, 'SMART', NULL),
+    (21, 5, '2024-05-12', 3050.000, 20.000, 'SMART', NULL),
+    (22, 5, '2024-06-12', 3100.000, 45.000, 'SMART', NULL),
+    
+    -- Commercial Small (meter_id = 6) - 400 units per month
+    (23, 6, '2024-01-20', 5000.000, 0.000, 'SMART', NULL),
+    (24, 6, '2024-02-20', 5400.000, 0.000, 'SMART', NULL),
+    (25, 6, '2024-03-20', 5800.000, 0.000, 'SMART', NULL),
+    (26, 6, '2024-04-20', 6200.000, 0.000, 'SMART', NULL),
+    (27, 6, '2024-05-20', 6600.000, 0.000, 'SMART', NULL),
+    
+    -- Commercial Large (meter_id = 7) - 1500 units per month
+    (28, 7, '2024-02-28', 10000.000, 0.000, 'MANUAL', 5),
+    (29, 7, '2024-03-28', 11500.000, 0.000, 'MANUAL', 5),
+    (30, 7, '2024-04-28', 13000.000, 0.000, 'MANUAL', 5),
+    (31, 7, '2024-05-28', 14500.000, 0.000, 'MANUAL', 5),
+    
+    -- Commercial Small (meter_id = 8) - 350 units per month
+    (32, 8, '2024-03-15', 7500.000, 0.000, 'SMART', NULL),
+    (33, 8, '2024-04-15', 7850.000, 0.000, 'SMART', NULL),
+    (34, 8, '2024-05-15', 8200.000, 0.000, 'SMART', NULL),
+    
+    -- Industrial (meter_id = 9) - 5000 units per month
+    (35, 9, '2024-04-01', 20000.000, 0.000, 'MANUAL', 5),
+    (36, 9, '2024-05-01', 25000.000, 0.000, 'MANUAL', 5),
+    (37, 9, '2024-06-01', 30000.000, 0.000, 'MANUAL', 5),
+    
+    -- Government (meter_id = 10) - 180 units per month
+    (38, 10, '2024-05-01', 8000.000, 0.000, 'SMART', NULL),
+    (39, 10, '2024-06-01', 8180.000, 0.000, 'SMART', NULL),
+    
+    -- Additional meters for testing
+    (40, 13, '2024-06-01', 100.000, 0.000, 'MANUAL', 5),
+    (41, 13, '2024-07-01', 220.000, 0.000, 'MANUAL', 5),
+    
+    (42, 14, '2024-06-15', 500.000, 0.000, 'SMART', NULL),
+    (43, 14, '2024-07-15', 590.000, 0.000, 'SMART', NULL),
+    
+    (44, 15, '2024-07-01', 1000.000, 0.000, 'MANUAL', 5),
+    (45, 15, '2024-08-01', 1175.000, 0.000, 'MANUAL', 5),
+    
+    -- Water Meters (cubic meters, typically much lower consumption)
+    -- meter_id = 16, 17, 18, 19, 20 - 15 cubic meters per month
+    (46, 16, '2024-01-10', 50.000, 0.000, 'MANUAL', 5),
+    (47, 16, '2024-02-10', 65.000, 0.000, 'MANUAL', 5),
+    (48, 16, '2024-03-10', 80.000, 0.000, 'MANUAL', 5),
+    
+    (49, 17, '2024-02-15', 100.000, 0.000, 'SMART', NULL),
+    (50, 17, '2024-03-15', 115.000, 0.000, 'SMART', NULL),
+    (51, 17, '2024-04-15', 130.000, 0.000, 'SMART', NULL),
+    
+    (52, 18, '2024-03-05', 200.000, 0.000, 'MANUAL', 5),
+    (53, 18, '2024-04-05', 215.000, 0.000, 'MANUAL', 5),
+    (54, 18, '2024-05-05', 230.000, 0.000, 'MANUAL', 5),
+    
+    (55, 19, '2024-04-10', 75.000, 0.000, 'SMART', NULL),
+    (56, 19, '2024-05-10', 90.000, 0.000, 'SMART', NULL),
+    
+    (57, 20, '2024-05-08', 150.000, 0.000, 'MANUAL', 5),
+    (58, 20, '2024-06-08', 165.000, 0.000, 'MANUAL', 5),
+    
+    -- Water Commercial - 60 cubic meters per month
+    (59, 21, '2024-01-25', 500.000, 0.000, 'SMART', NULL),
+    (60, 21, '2024-02-25', 560.000, 0.000, 'SMART', NULL),
+    (61, 21, '2024-03-25', 620.000, 0.000, 'SMART', NULL),
+    
+    (62, 23, '2024-03-18', 300.000, 0.000, 'SMART', NULL),
+    (63, 23, '2024-04-18', 360.000, 0.000, 'SMART', NULL),
+    (64, 23, '2024-05-18', 420.000, 0.000, 'SMART', NULL),
+    
+    (65, 24, '2024-04-05', 1000.000, 0.000, 'MANUAL', 5),
+    (66, 24, '2024-05-05', 1060.000, 0.000, 'MANUAL', 5),
+    
+    (67, 25, '2024-05-02', 2000.000, 0.000, 'SMART', NULL),
+    (68, 25, '2024-06-02', 2060.000, 0.000, 'SMART', NULL),
+    
+    -- Gas Meters (cubic meters) - 120 cubic meters per month
+    (69, 26, '2024-02-01', 1000.000, 0.000, 'SMART', NULL),
+    (70, 26, '2024-03-01', 1120.000, 0.000, 'SMART', NULL),
+    (71, 26, '2024-04-01', 1240.000, 0.000, 'SMART', NULL),
+    
+    (72, 27, '2024-03-10', 500.000, 0.000, 'MANUAL', 5),
+    (73, 27, '2024-04-10', 620.000, 0.000, 'MANUAL', 5),
+    (74, 27, '2024-05-10', 740.000, 0.000, 'MANUAL', 5),
+    
+    (75, 28, '2024-04-15', 2000.000, 0.000, 'SMART', NULL),
+    (76, 28, '2024-05-15', 2120.000, 0.000, 'SMART', NULL),
+    
+    (77, 29, '2024-05-20', 3000.000, 0.000, 'MANUAL', 5),
+    (78, 29, '2024-06-20', 3120.000, 0.000, 'MANUAL', 5),
+    
+    (79, 30, '2024-06-05', 4000.000, 0.000, 'SMART', NULL),
+    (80, 30, '2024-07-05', 4120.000, 0.000, 'SMART', NULL),
+    
+    -- Gas Commercial - 600 cubic meters per month
+    (81, 32, '2024-03-20', 5000.000, 0.000, 'SMART', NULL),
+    (82, 32, '2024-04-20', 5600.000, 0.000, 'SMART', NULL),
+    (83, 32, '2024-05-20', 6200.000, 0.000, 'SMART', NULL),
+    
+    (84, 33, '2024-04-25', 10000.000, 0.000, 'MANUAL', 5),
+    (85, 33, '2024-05-25', 10600.000, 0.000, 'MANUAL', 5),
+    
+    (86, 34, '2024-05-30', 15000.000, 0.000, 'SMART', NULL),
+    (87, 34, '2024-06-30', 15600.000, 0.000, 'SMART', NULL),
+    
+    (88, 35, '2024-06-10', 20000.000, 0.000, 'MANUAL', 5),
+    (89, 35, '2024-07-10', 20600.000, 0.000, 'MANUAL', 5);
+    
+    SET IDENTITY_INSERT dbo.MeterReading OFF;
+    PRINT 'Meter readings created successfully';
+END
+GO
+
+-- =====================
 -- CUSTOMER ADDRESSES
 -- =====================
 IF NOT EXISTS (SELECT 1 FROM dbo.CustomerAddress)
@@ -609,6 +909,261 @@ BEGIN
     (9, '+94779012345'),
     (10, '+94332123456');
     PRINT 'Customer phone numbers created successfully';
+END
+GO
+
+-- =====================
+-- METERS
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.Meter)
+BEGIN
+    SET IDENTITY_INSERT dbo.Meter ON;
+    
+    -- Electricity Meters (utility_type_id = 1)
+    INSERT INTO dbo.Meter (meter_id, meter_serial_no, utility_type_id, installation_date, is_smart_meter, status) VALUES
+    (1, 'ELEC-001-2024', 1, '2024-01-15', 1, 'ACTIVE'),
+    (2, 'ELEC-002-2024', 1, '2024-02-20', 0, 'ACTIVE'),
+    (3, 'ELEC-003-2024', 1, '2024-03-10', 1, 'ACTIVE'),
+    (4, 'ELEC-004-2024', 1, '2024-04-05', 0, 'ACTIVE'),
+    (5, 'ELEC-005-2024', 1, '2024-05-12', 1, 'ACTIVE'),
+    (6, 'ELEC-006-2024', 1, '2024-01-20', 1, 'ACTIVE'),
+    (7, 'ELEC-007-2024', 1, '2024-02-28', 0, 'ACTIVE'),
+    (8, 'ELEC-008-2024', 1, '2024-03-15', 1, 'ACTIVE'),
+    (9, 'ELEC-009-2024', 1, '2024-04-01', 0, 'ACTIVE'),
+    (10, 'ELEC-010-2024', 1, '2024-05-01', 1, 'ACTIVE'),
+    (11, 'ELEC-011-2024', 1, '2023-12-10', 0, 'FAULTY'),
+    (12, 'ELEC-012-2024', 1, '2023-11-05', 1, 'DISCONNECTED'),
+    (13, 'ELEC-013-2024', 1, '2024-06-01', 0, 'ACTIVE'),
+    (14, 'ELEC-014-2024', 1, '2024-06-15', 1, 'ACTIVE'),
+    (15, 'ELEC-015-2024', 1, '2024-07-01', 0, 'ACTIVE'),
+    
+    -- Water Meters (utility_type_id = 2)
+    (16, 'WATER-001-2024', 2, '2024-01-10', 0, 'ACTIVE'),
+    (17, 'WATER-002-2024', 2, '2024-02-15', 1, 'ACTIVE'),
+    (18, 'WATER-003-2024', 2, '2024-03-05', 0, 'ACTIVE'),
+    (19, 'WATER-004-2024', 2, '2024-04-10', 1, 'ACTIVE'),
+    (20, 'WATER-005-2024', 2, '2024-05-08', 0, 'ACTIVE'),
+    (21, 'WATER-006-2024', 2, '2024-01-25', 1, 'ACTIVE'),
+    (22, 'WATER-007-2024', 2, '2024-02-20', 0, 'FAULTY'),
+    (23, 'WATER-008-2024', 2, '2024-03-18', 1, 'ACTIVE'),
+    (24, 'WATER-009-2024', 2, '2024-04-05', 0, 'ACTIVE'),
+    (25, 'WATER-010-2024', 2, '2024-05-02', 1, 'ACTIVE'),
+    
+    -- Gas Meters (utility_type_id = 3)
+    (26, 'GAS-001-2024', 3, '2024-02-01', 1, 'ACTIVE'),
+    (27, 'GAS-002-2024', 3, '2024-03-10', 0, 'ACTIVE'),
+    (28, 'GAS-003-2024', 3, '2024-04-15', 1, 'ACTIVE'),
+    (29, 'GAS-004-2024', 3, '2024-05-20', 0, 'ACTIVE'),
+    (30, 'GAS-005-2024', 3, '2024-06-05', 1, 'ACTIVE'),
+    (31, 'GAS-006-2024', 3, '2024-02-10', 0, 'DISCONNECTED'),
+    (32, 'GAS-007-2024', 3, '2024-03-20', 1, 'ACTIVE'),
+    (33, 'GAS-008-2024', 3, '2024-04-25', 0, 'ACTIVE'),
+    (34, 'GAS-009-2024', 3, '2024-05-30', 1, 'ACTIVE'),
+    (35, 'GAS-010-2024', 3, '2024-06-10', 0, 'ACTIVE');
+    
+    SET IDENTITY_INSERT dbo.Meter OFF;
+    PRINT 'Meters created successfully';
+END
+GO
+
+-- =====================
+-- NETWORK NODES
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.NetworkNode)
+BEGIN
+    SET IDENTITY_INSERT dbo.NetworkNode ON;
+    
+    -- Electricity Network Nodes (utility_type_id = 1)
+    -- Substations
+    INSERT INTO dbo.NetworkNode (node_id, name, status, node_type, utility_type_id) VALUES
+    (1, 'Colombo Central Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (2, 'Fort Primary Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (3, 'Kollupitiya Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (4, 'Bambalapitiya Transformer Station', 'ACTIVE', 'TRANSFORMER', 1),
+    (5, 'Wellawatte Local Station', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (6, 'Nugegoda Main Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (7, 'Dehiwala Distribution Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (8, 'Mount Lavinia Transformer', 'ACTIVE', 'TRANSFORMER', 1),
+    (9, 'Moratuwa Grid Station', 'ACTIVE', 'SUBSTATION', 1),
+    (10, 'Ratmalana Distribution Point', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (11, 'Maharagama Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (12, 'Piliyandala Local Station', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (13, 'Homagama Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (14, 'Kesbewa Transformer Station', 'ACTIVE', 'TRANSFORMER', 1),
+    (15, 'Negombo Main Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (16, 'Ja-Ela Distribution Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (17, 'Wattala Transformer', 'ACTIVE', 'TRANSFORMER', 1),
+    (18, 'Kelaniya Grid Station', 'ACTIVE', 'SUBSTATION', 1),
+    (19, 'Gampaha Primary Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (20, 'Kalutara Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (21, 'Panadura Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    (22, 'Kandy Main Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (23, 'Peradeniya Grid Station', 'ACTIVE', 'SUBSTATION', 1),
+    (24, 'Galle Primary Substation', 'ACTIVE', 'SUBSTATION', 1),
+    (25, 'Matara Distribution Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 1),
+    
+    -- Water Network Nodes (utility_type_id = 2)
+    -- Water Treatment Plants and Pumping Stations
+    INSERT INTO dbo.NetworkNode (node_id, name, status, node_type, utility_type_id) VALUES
+    (101, 'Ambatale Water Treatment Plant', 'ACTIVE', 'TREATMENT_PLANT', 2),
+    (102, 'Labugama Reservoir', 'ACTIVE', 'RESERVOIR', 2),
+    (103, 'Kalatuwawa Reservoir', 'ACTIVE', 'RESERVOIR', 2),
+    (104, 'Colombo Main Pumping Station', 'ACTIVE', 'PUMPING_STATION', 2),
+    (105, 'Fort Water Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 2),
+    (106, 'Kollupitiya Pumping Station', 'ACTIVE', 'PUMPING_STATION', 2),
+    (107, 'Wellawatte Distribution Point', 'ACTIVE', 'DISTRIBUTION_CENTER', 2),
+    (108, 'Nugegoda Water Tower', 'ACTIVE', 'WATER_TOWER', 2),
+    (109, 'Dehiwala Pumping Station', 'ACTIVE', 'PUMPING_STATION', 2),
+    (110, 'Moratuwa Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 2),
+    (111, 'Maharagama Water Treatment Plant', 'ACTIVE', 'TREATMENT_PLANT', 2),
+    (112, 'Kelaniya Water Distribution Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 2),
+    (113, 'Gampaha Main Reservoir', 'ACTIVE', 'RESERVOIR', 2),
+    (114, 'Negombo Water Tower', 'ACTIVE', 'WATER_TOWER', 2),
+    (115, 'Kalutara Treatment Plant', 'ACTIVE', 'TREATMENT_PLANT', 2),
+    (116, 'Panadura Pumping Station', 'ACTIVE', 'PUMPING_STATION', 2),
+    (117, 'Kandy Water Treatment Plant', 'ACTIVE', 'TREATMENT_PLANT', 2),
+    (118, 'Peradeniya Reservoir', 'ACTIVE', 'RESERVOIR', 2),
+    (119, 'Galle Water Distribution Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 2),
+    (120, 'Matara Pumping Station', 'ACTIVE', 'PUMPING_STATION', 2),
+    
+    -- Gas Network Nodes (utility_type_id = 3)
+    -- Gas Distribution Centers and Pressure Regulation Stations
+    INSERT INTO dbo.NetworkNode (node_id, name, status, node_type, utility_type_id) VALUES
+    (201, 'Colombo Gas Terminal', 'ACTIVE', 'TERMINAL', 3),
+    (202, 'Kerawalapitiya Storage Facility', 'ACTIVE', 'STORAGE', 3),
+    (203, 'Fort Pressure Regulation Station', 'ACTIVE', 'PRESSURE_STATION', 3),
+    (204, 'Kollupitiya Distribution Point', 'ACTIVE', 'DISTRIBUTION_CENTER', 3),
+    (205, 'Nugegoda Gas Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 3),
+    (206, 'Moratuwa Pressure Station', 'ACTIVE', 'PRESSURE_STATION', 3),
+    (207, 'Kelaniya Gas Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 3),
+    (208, 'Negombo Pressure Regulation Station', 'ACTIVE', 'PRESSURE_STATION', 3),
+    (209, 'Gampaha Gas Hub', 'ACTIVE', 'DISTRIBUTION_CENTER', 3),
+    (210, 'Kalutara Distribution Point', 'ACTIVE', 'DISTRIBUTION_CENTER', 3),
+    (211, 'Kandy Gas Terminal', 'ACTIVE', 'TERMINAL', 3),
+    (212, 'Galle Pressure Station', 'ACTIVE', 'PRESSURE_STATION', 3),
+    (213, 'Matara Distribution Center', 'ACTIVE', 'DISTRIBUTION_CENTER', 3);
+    
+    SET IDENTITY_INSERT dbo.NetworkNode OFF;
+    PRINT 'Network nodes created successfully';
+END
+GO
+
+-- =====================
+-- NETWORK LINKS
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.NetworkLink)
+BEGIN
+    SET IDENTITY_INSERT dbo.NetworkLink ON;
+    
+    -- Electricity Network Links (utility_type_id = 1)
+    -- Transmission and Distribution Lines
+    INSERT INTO dbo.NetworkLink (link_id, link_type, status, length_km, diameter_mm, from_node_id, to_node_id, max_capacity, capacity_uom, utility_type_id) VALUES
+    -- Main transmission lines
+    (1, 'TRANSMISSION_LINE', 'ACTIVE', 5.5, NULL, 1, 2, 250.000, 'MVA', 1),
+    (2, 'TRANSMISSION_LINE', 'ACTIVE', 3.2, NULL, 2, 3, 150.000, 'MVA', 1),
+    (3, 'DISTRIBUTION_LINE', 'ACTIVE', 2.1, NULL, 3, 4, 50.000, 'MVA', 1),
+    (4, 'DISTRIBUTION_LINE', 'ACTIVE', 1.8, NULL, 4, 5, 30.000, 'MVA', 1),
+    (5, 'TRANSMISSION_LINE', 'ACTIVE', 8.5, NULL, 1, 6, 200.000, 'MVA', 1),
+    (6, 'DISTRIBUTION_LINE', 'ACTIVE', 3.5, NULL, 6, 7, 60.000, 'MVA', 1),
+    (7, 'DISTRIBUTION_LINE', 'ACTIVE', 2.2, NULL, 7, 8, 40.000, 'MVA', 1),
+    (8, 'DISTRIBUTION_LINE', 'ACTIVE', 3.8, NULL, 8, 9, 50.000, 'MVA', 1),
+    (9, 'DISTRIBUTION_LINE', 'ACTIVE', 2.5, NULL, 9, 10, 35.000, 'MVA', 1),
+    (10, 'TRANSMISSION_LINE', 'ACTIVE', 6.2, NULL, 6, 11, 120.000, 'MVA', 1),
+    (11, 'DISTRIBUTION_LINE', 'ACTIVE', 4.5, NULL, 11, 12, 45.000, 'MVA', 1),
+    (12, 'DISTRIBUTION_LINE', 'ACTIVE', 5.8, NULL, 11, 13, 50.000, 'MVA', 1),
+    (13, 'DISTRIBUTION_LINE', 'ACTIVE', 3.1, NULL, 13, 14, 30.000, 'MVA', 1),
+    (14, 'TRANSMISSION_LINE', 'ACTIVE', 35.5, NULL, 1, 15, 180.000, 'MVA', 1),
+    (15, 'DISTRIBUTION_LINE', 'ACTIVE', 8.2, NULL, 15, 16, 55.000, 'MVA', 1),
+    (16, 'DISTRIBUTION_LINE', 'ACTIVE', 5.5, NULL, 16, 17, 40.000, 'MVA', 1),
+    (17, 'DISTRIBUTION_LINE', 'ACTIVE', 4.8, NULL, 17, 18, 45.000, 'MVA', 1),
+    (18, 'TRANSMISSION_LINE', 'ACTIVE', 12.5, NULL, 1, 19, 150.000, 'MVA', 1),
+    (19, 'TRANSMISSION_LINE', 'ACTIVE', 28.5, NULL, 1, 20, 140.000, 'MVA', 1),
+    (20, 'DISTRIBUTION_LINE', 'ACTIVE', 7.5, NULL, 20, 21, 50.000, 'MVA', 1),
+    (21, 'TRANSMISSION_LINE', 'ACTIVE', 115.0, NULL, 1, 22, 300.000, 'MVA', 1),
+    (22, 'DISTRIBUTION_LINE', 'ACTIVE', 8.5, NULL, 22, 23, 80.000, 'MVA', 1),
+    (23, 'TRANSMISSION_LINE', 'ACTIVE', 95.0, NULL, 1, 24, 250.000, 'MVA', 1),
+    (24, 'DISTRIBUTION_LINE', 'ACTIVE', 35.0, NULL, 24, 25, 70.000, 'MVA', 1),
+    
+    -- Water Network Links (utility_type_id = 2)
+    -- Pipelines from reservoirs to treatment plants to distribution
+    INSERT INTO dbo.NetworkLink (link_id, link_type, status, length_km, diameter_mm, from_node_id, to_node_id, max_capacity, capacity_uom, utility_type_id) VALUES
+    (101, 'MAIN_PIPELINE', 'ACTIVE', 12.5, 1200.00, 102, 101, 150.000, 'MLD', 2),
+    (102, 'MAIN_PIPELINE', 'ACTIVE', 8.5, 1200.00, 103, 101, 120.000, 'MLD', 2),
+    (103, 'MAIN_PIPELINE', 'ACTIVE', 15.5, 1000.00, 101, 104, 200.000, 'MLD', 2),
+    (104, 'DISTRIBUTION_PIPE', 'ACTIVE', 3.2, 800.00, 104, 105, 80.000, 'MLD', 2),
+    (105, 'DISTRIBUTION_PIPE', 'ACTIVE', 2.5, 600.00, 105, 106, 50.000, 'MLD', 2),
+    (106, 'DISTRIBUTION_PIPE', 'ACTIVE', 2.8, 600.00, 106, 107, 45.000, 'MLD', 2),
+    (107, 'MAIN_PIPELINE', 'ACTIVE', 8.5, 800.00, 104, 108, 90.000, 'MLD', 2),
+    (108, 'DISTRIBUTION_PIPE', 'ACTIVE', 4.2, 600.00, 108, 109, 55.000, 'MLD', 2),
+    (109, 'DISTRIBUTION_PIPE', 'ACTIVE', 3.5, 600.00, 109, 110, 50.000, 'MLD', 2),
+    (110, 'MAIN_PIPELINE', 'ACTIVE', 12.0, 900.00, 104, 111, 100.000, 'MLD', 2),
+    (111, 'MAIN_PIPELINE', 'ACTIVE', 18.5, 1000.00, 101, 112, 110.000, 'MLD', 2),
+    (112, 'MAIN_PIPELINE', 'ACTIVE', 25.0, 1000.00, 101, 113, 120.000, 'MLD', 2),
+    (113, 'DISTRIBUTION_PIPE', 'ACTIVE', 15.0, 700.00, 113, 114, 60.000, 'MLD', 2),
+    (114, 'MAIN_PIPELINE', 'ACTIVE', 38.0, 900.00, 101, 115, 90.000, 'MLD', 2),
+    (115, 'DISTRIBUTION_PIPE', 'ACTIVE', 12.0, 600.00, 115, 116, 50.000, 'MLD', 2),
+    (116, 'MAIN_PIPELINE', 'ACTIVE', 95.0, 1000.00, 101, 117, 100.000, 'MLD', 2),
+    (117, 'DISTRIBUTION_PIPE', 'ACTIVE', 8.0, 700.00, 117, 118, 65.000, 'MLD', 2),
+    (118, 'MAIN_PIPELINE', 'ACTIVE', 108.0, 900.00, 101, 119, 85.000, 'MLD', 2),
+    (119, 'DISTRIBUTION_PIPE', 'ACTIVE', 35.0, 600.00, 119, 120, 45.000, 'MLD', 2),
+    
+    -- Gas Network Links (utility_type_id = 3)
+    -- High-pressure and medium-pressure pipelines
+    INSERT INTO dbo.NetworkLink (link_id, link_type, status, length_km, diameter_mm, from_node_id, to_node_id, max_capacity, capacity_uom, utility_type_id) VALUES
+    (201, 'HIGH_PRESSURE', 'ACTIVE', 8.5, 600.00, 201, 202, 50.000, 'MMSCMD', 3),
+    (202, 'HIGH_PRESSURE', 'ACTIVE', 12.0, 500.00, 202, 203, 40.000, 'MMSCMD', 3),
+    (203, 'MEDIUM_PRESSURE', 'ACTIVE', 3.5, 400.00, 203, 204, 20.000, 'MMSCMD', 3),
+    (204, 'MEDIUM_PRESSURE', 'ACTIVE', 8.5, 400.00, 203, 205, 25.000, 'MMSCMD', 3),
+    (205, 'MEDIUM_PRESSURE', 'ACTIVE', 6.5, 350.00, 205, 206, 18.000, 'MMSCMD', 3),
+    (206, 'HIGH_PRESSURE', 'ACTIVE', 15.0, 500.00, 202, 207, 35.000, 'MMSCMD', 3),
+    (207, 'HIGH_PRESSURE', 'ACTIVE', 28.0, 450.00, 202, 208, 30.000, 'MMSCMD', 3),
+    (208, 'MEDIUM_PRESSURE', 'ACTIVE', 10.0, 350.00, 208, 209, 22.000, 'MMSCMD', 3),
+    (209, 'MEDIUM_PRESSURE', 'ACTIVE', 32.0, 400.00, 202, 210, 25.000, 'MMSCMD', 3),
+    (210, 'HIGH_PRESSURE', 'ACTIVE', 98.0, 500.00, 201, 211, 40.000, 'MMSCMD', 3),
+    (211, 'HIGH_PRESSURE', 'ACTIVE', 105.0, 450.00, 201, 212, 35.000, 'MMSCMD', 3),
+    (212, 'MEDIUM_PRESSURE', 'ACTIVE', 35.0, 350.00, 212, 213, 20.000, 'MMSCMD', 3);
+    
+    SET IDENTITY_INSERT dbo.NetworkLink OFF;
+    PRINT 'Network links created successfully';
+END
+GO
+
+-- =====================
+-- AREA NODE MAPPINGS
+-- =====================
+IF NOT EXISTS (SELECT 1 FROM dbo.AreaNode)
+BEGIN
+    -- Electricity Nodes to Geographic Areas
+    -- Colombo District nodes
+    INSERT INTO dbo.AreaNode (node_id, geo_area_id) VALUES
+    (1, 10), (2, 100), (3, 102), (4, 103), (5, 105),
+    (6, 115), (7, 116), (8, 117), (9, 118), (10, 119),
+    (11, 121), (12, 120), (13, 123), (14, 122),
+    
+    -- Gampaha District nodes
+    (15, 11), (16, 132), (17, 132), (18, 133), (19, 134),
+    
+    -- Kalutara District nodes
+    (20, 12), (21, 141),
+    
+    -- Kandy District nodes
+    (22, 13), (23, 151),
+    
+    -- Galle and Matara nodes
+    (24, 16), (25, 17),
+    
+    -- Water Nodes to Geographic Areas
+    (101, 10), (102, 10), (103, 10), (104, 10), (105, 100),
+    (106, 102), (107, 105), (108, 115), (109, 116), (110, 118),
+    (111, 121), (112, 133), (113, 11), (114, 130), (115, 12),
+    (116, 141), (117, 13), (118, 151), (119, 16), (120, 17),
+    
+    -- Gas Nodes to Geographic Areas
+    (201, 10), (202, 10), (203, 100), (204, 102), (205, 115),
+    (206, 118), (207, 133), (208, 130), (209, 134), (210, 12),
+    (211, 13), (212, 16), (213, 17);
+    
+    PRINT 'Area-Node mappings created successfully';
 END
 GO
 

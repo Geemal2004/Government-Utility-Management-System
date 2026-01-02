@@ -106,4 +106,33 @@ export class CreateMeterReadingDto {
   @IsString({ message: 'Notes must be a string' })
   @MaxLength(500, { message: 'Notes must not exceed 500 characters' })
   notes?: string;
+
+  // Auto-billing options
+  @ApiPropertyOptional({
+    description: 'Whether to auto-generate a bill after creating this reading. Default is true.',
+    example: true,
+    default: true,
+  })
+  @IsOptional()
+  autoGenerateBill?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Minimum days between bills for auto-generation. Default is 25 days.',
+    example: 25,
+    default: 25,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'minDaysBetweenBills must be a number' })
+  @Min(1, { message: 'minDaysBetweenBills must be at least 1' })
+  minDaysBetweenBills?: number;
+
+  @ApiPropertyOptional({
+    description: 'Number of days from bill date until due date. Default is 15 days.',
+    example: 15,
+    default: 15,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'dueDaysFromBillDate must be a number' })
+  @Min(1, { message: 'dueDaysFromBillDate must be at least 1' })
+  dueDaysFromBillDate?: number;
 }

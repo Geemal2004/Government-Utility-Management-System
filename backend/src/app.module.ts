@@ -8,6 +8,7 @@ import { ConnectionsModule } from './connections/connections.module';
 import { LookupModule } from './lookup/lookup.module';
 import { DatabaseModule } from './database/database.module';
 import { ReadingsModule } from './readings/readings.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ReadingsModule } from './readings/readings.module';
     ConnectionsModule,
     LookupModule,
     ReadingsModule,
+    BillingModule,
   ],
 })
 export class AppModule {}

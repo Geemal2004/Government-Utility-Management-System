@@ -359,15 +359,33 @@ export class ReadingsController {
   @ApiOperation({
     summary: 'Create meter reading',
     description:
-      'Record a new meter reading. If the user is a METER_READER, their ID is automatically associated.',
+      'Record a new meter reading. If the user is a METER_READER, their ID is automatically associated. ' +
+      'By default, a bill is automatically generated if conditions are met (enough readings, sufficient days since last bill).',
   })
   @ApiBody({
     type: CreateMeterReadingDto,
     description: 'Meter reading data',
   })
   @ApiCreatedResponse({
-    description: 'Meter reading created successfully',
-    type: MeterReadingResponseDto,
+    description:
+      'Meter reading created successfully. May include generatedBill if a bill was auto-generated.',
+    schema: {
+      allOf: [
+        { $ref: '#/components/schemas/MeterReadingResponseDto' },
+        {
+          properties: {
+            generatedBill: {
+              type: 'object',
+              nullable: true,
+              properties: {
+                billId: { type: 'number', description: 'ID of the auto-generated bill' },
+                totalAmount: { type: 'number', description: 'Total amount of the bill' },
+              },
+            },
+          },
+        },
+      ],
+    },
   })
   @ApiBadRequestResponse({
     description: 'Validation failed or reading is invalid',
@@ -381,7 +399,11 @@ export class ReadingsController {
       meterReaderId = user.meterReaderId;
     }
 
-    return this.readingsService.create(createDto, meterReaderId);
+    return this.readingsService.create(createDto, meterReaderId, {
+      autoGenerateBill: createDto.autoGenerateBill ?? true, // Default to true if not specified
+      minDaysBetweenBills: createDto.minDaysBetweenBills ?? 25,
+      dueDaysFromBillDate: createDto.dueDaysFromBillDate ?? 15,
+    });
   }
 
   /**
