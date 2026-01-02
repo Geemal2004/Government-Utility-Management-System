@@ -198,25 +198,24 @@ BEGIN
     
     -- Districts (Second Level - parent is Province)
     -- Western Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
-    (10, 'Colombo District', 'District', 1),
+    
     (11, 'Gampaha District', 'District', 1),
     (12, 'Kalutara District', 'District', 1);
     
     -- Central Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+
     (13, 'Kandy District', 'District', 2),
     (14, 'Matale District', 'District', 2),
     (15, 'Nuwara Eliya District', 'District', 2);
     
     -- Southern Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (16, 'Galle District', 'District', 3),
     (17, 'Matara District', 'District', 3),
     (18, 'Hambantota District', 'District', 3);
     
     -- Northern Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (19, 'Jaffna District', 'District', 4),
     (20, 'Kilinochchi District', 'District', 4),
     (21, 'Mannar District', 'District', 4),
@@ -224,34 +223,34 @@ BEGIN
     (23, 'Vavuniya District', 'District', 4);
     
     -- Eastern Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (24, 'Batticaloa District', 'District', 5),
     (25, 'Ampara District', 'District', 5),
     (26, 'Trincomalee District', 'District', 5);
     
     -- North Western Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (27, 'Kurunegala District', 'District', 6),
     (28, 'Puttalam District', 'District', 6);
     
     -- North Central Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (29, 'Anuradhapura District', 'District', 7),
     (30, 'Polonnaruwa District', 'District', 7);
     
     -- Uva Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (31, 'Badulla District', 'District', 8),
     (32, 'Monaragala District', 'District', 8);
     
     -- Sabaragamuwa Province Districts
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (33, 'Ratnapura District', 'District', 9),
     (34, 'Kegalle District', 'District', 9);
     
     -- Divisions/Areas (Third Level - parent is District)
     -- Colombo District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (100, 'Colombo Fort', 'Division', 10),
     (101, 'Slave Island', 'Division', 10),
     (102, 'Kollupitiya', 'Division', 10),
@@ -278,7 +277,7 @@ BEGIN
     (123, 'Homagama', 'Division', 10);
     
     -- Gampaha District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (130, 'Negombo', 'Division', 11),
     (131, 'Ja-Ela', 'Division', 11),
     (132, 'Wattala', 'Division', 11),
@@ -290,7 +289,7 @@ BEGIN
     (138, 'Minuwangoda', 'Division', 11);
     
     -- Kalutara District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (140, 'Kalutara', 'Division', 12),
     (141, 'Panadura', 'Division', 12),
     (142, 'Wadduwa', 'Division', 12),
@@ -301,51 +300,51 @@ BEGIN
     (147, 'Bandaragama', 'Division', 12);
     
     -- Kandy District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (150, 'Kandy', 'Division', 13),
     (151, 'Peradeniya', 'Division', 13),
     (152, 'Katugastota', 'Division', 13),
     (153, 'Kundasale', 'Division', 13);
     
     -- Matale District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (160, 'Matale', 'Division', 14),
     (161, 'Dambulla', 'Division', 14),
     (162, 'Sigiriya', 'Division', 14);
     
     -- Nuwara Eliya District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (170, 'Nuwara Eliya', 'Division', 15),
     (171, 'Hatton', 'Division', 15),
     (172, 'Talawakele', 'Division', 15);
     
     -- Galle District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (180, 'Galle', 'Division', 16),
     (181, 'Unawatuna', 'Division', 16),
     (182, 'Hikkaduwa', 'Division', 16),
     (183, 'Ambalangoda', 'Division', 16);
     
     -- Matara District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (190, 'Matara', 'Division', 17),
     (191, 'Weligama', 'Division', 17),
     (192, 'Mirissa', 'Division', 17);
     
     -- Hambantota District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (200, 'Hambantota', 'Division', 18),
     (201, 'Tangalle', 'Division', 18),
     (202, 'Tissamaharama', 'Division', 18);
     
     -- Jaffna District Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (210, 'Jaffna', 'Division', 19),
     (211, 'Chavakachcheri', 'Division', 19),
     (212, 'Point Pedro', 'Division', 19);
     
     -- Other Districts - Main Towns as Divisions
-    INSERT INTO dbo.GeoArea (geo_area_id, name, type, parent_geo_area_id) VALUES
+    
     (220, 'Kilinochchi', 'Division', 20),
     (221, 'Mannar', 'Division', 21),
     (222, 'Mullaitivu', 'Division', 22),
@@ -534,43 +533,43 @@ BEGIN
     (5, 1, 180.001, NULL, 45.0000, 100.00, NULL, '2024-01-01', NULL),
     
     -- Residential Low Income Tariff Slabs (tariff_category_id = 2) - Subsidized rates
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (6, 2, 0.000, 60.000, 2.5000, 50.00, NULL, '2024-01-01', NULL),
     (7, 2, 60.001, 90.000, 6.0000, 50.00, NULL, '2024-01-01', NULL),
     (8, 2, 90.001, NULL, 10.0000, 50.00, NULL, '2024-01-01', NULL),
     
     -- Commercial Small Tariff Slabs (tariff_category_id = 3)
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (9, 3, 0.000, 300.000, 21.0000, 300.00, NULL, '2024-01-01', NULL),
     (10, 3, 300.001, NULL, 25.0000, 300.00, NULL, '2024-01-01', NULL),
     
     -- Commercial Large Tariff Slabs (tariff_category_id = 4)
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (11, 4, 0.000, 1000.000, 28.0000, 1000.00, NULL, '2024-01-01', NULL),
     (12, 4, 1000.001, NULL, 32.0000, 1000.00, NULL, '2024-01-01', NULL),
     
     -- Industrial Tariff (tariff_category_id = 5) - Flat rate
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (13, 5, 0.000, NULL, 18.5000, 2000.00, NULL, '2024-01-01', NULL),
     
     -- Water Residential Tariff Slabs (tariff_category_id = 6)
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (14, 6, 0.000, 10.000, 15.0000, 50.00, NULL, '2024-01-01', NULL),
     (15, 6, 10.001, 20.000, 35.0000, 50.00, NULL, '2024-01-01', NULL),
     (16, 6, 20.001, NULL, 85.0000, 50.00, NULL, '2024-01-01', NULL),
     
     -- Water Commercial Tariff Slabs (tariff_category_id = 7)
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (17, 7, 0.000, 50.000, 45.0000, 200.00, NULL, '2024-01-01', NULL),
     (18, 7, 50.001, NULL, 95.0000, 200.00, NULL, '2024-01-01', NULL),
     
     -- Gas Residential Tariff Slabs (tariff_category_id = 8)
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (19, 8, 0.000, 100.000, 75.0000, 150.00, NULL, '2024-01-01', NULL),
     (20, 8, 100.001, NULL, 95.0000, 150.00, NULL, '2024-01-01', NULL),
     
     -- Gas Commercial Tariff Slabs (tariff_category_id = 9)
-    INSERT INTO dbo.TariffSlab (slab_id, tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge, unit_price, valid_from, valid_to) VALUES
+    
     (21, 9, 0.000, 500.000, 85.0000, 500.00, NULL, '2024-01-01', NULL),
     (22, 9, 500.001, NULL, 105.0000, 500.00, NULL, '2024-01-01', NULL);
     
@@ -1004,7 +1003,7 @@ BEGIN
     
     -- Water Network Nodes (utility_type_id = 2)
     -- Water Treatment Plants and Pumping Stations
-    INSERT INTO dbo.NetworkNode (node_id, name, status, node_type, utility_type_id) VALUES
+    
     (101, 'Ambatale Water Treatment Plant', 'ACTIVE', 'TREATMENT_PLANT', 2),
     (102, 'Labugama Reservoir', 'ACTIVE', 'RESERVOIR', 2),
     (103, 'Kalatuwawa Reservoir', 'ACTIVE', 'RESERVOIR', 2),
@@ -1028,7 +1027,7 @@ BEGIN
     
     -- Gas Network Nodes (utility_type_id = 3)
     -- Gas Distribution Centers and Pressure Regulation Stations
-    INSERT INTO dbo.NetworkNode (node_id, name, status, node_type, utility_type_id) VALUES
+    
     (201, 'Colombo Gas Terminal', 'ACTIVE', 'TERMINAL', 3),
     (202, 'Kerawalapitiya Storage Facility', 'ACTIVE', 'STORAGE', 3),
     (203, 'Fort Pressure Regulation Station', 'ACTIVE', 'PRESSURE_STATION', 3),
@@ -1086,7 +1085,7 @@ BEGIN
     
     -- Water Network Links (utility_type_id = 2)
     -- Pipelines from reservoirs to treatment plants to distribution
-    INSERT INTO dbo.NetworkLink (link_id, link_type, status, length_km, diameter_mm, from_node_id, to_node_id, max_capacity, capacity_uom, utility_type_id) VALUES
+    
     (101, 'MAIN_PIPELINE', 'ACTIVE', 12.5, 1200.00, 102, 101, 150.000, 'MLD', 2),
     (102, 'MAIN_PIPELINE', 'ACTIVE', 8.5, 1200.00, 103, 101, 120.000, 'MLD', 2),
     (103, 'MAIN_PIPELINE', 'ACTIVE', 15.5, 1000.00, 101, 104, 200.000, 'MLD', 2),
@@ -1109,7 +1108,7 @@ BEGIN
     
     -- Gas Network Links (utility_type_id = 3)
     -- High-pressure and medium-pressure pipelines
-    INSERT INTO dbo.NetworkLink (link_id, link_type, status, length_km, diameter_mm, from_node_id, to_node_id, max_capacity, capacity_uom, utility_type_id) VALUES
+    
     (201, 'HIGH_PRESSURE', 'ACTIVE', 8.5, 600.00, 201, 202, 50.000, 'MMSCMD', 3),
     (202, 'HIGH_PRESSURE', 'ACTIVE', 12.0, 500.00, 202, 203, 40.000, 'MMSCMD', 3),
     (203, 'MEDIUM_PRESSURE', 'ACTIVE', 3.5, 400.00, 203, 204, 20.000, 'MMSCMD', 3),
