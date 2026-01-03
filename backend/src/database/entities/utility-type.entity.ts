@@ -1,9 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
-/**
- * UtilityType entity mapping to the UtilityType table in SQL Server
- * Represents types of utilities (Electricity, Water, Gas)
- */
 @Entity({ name: 'UtilityType' })
 export class UtilityType {
   @PrimaryGeneratedColumn({ name: 'utility_type_id', type: 'bigint' })
