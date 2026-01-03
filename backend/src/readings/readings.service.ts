@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { MeterReading, ReadingSource } from '../database/entities/meter-reading.entity';
 import { Meter } from '../database/entities/meter.entity';
 import { MeterReader } from '../database/entities/meter-reader.entity';
@@ -23,6 +24,7 @@ import {
 } from './dto';
 import { PaginatedResponseDto } from '../common/dto/pagination.dto';
 import { BillingService } from '../billing/billing.service';
+import { MeterReadingCreatedEvent } from './events';
 
 /**
  * Service for managing meter readings
@@ -47,6 +49,7 @@ export class ReadingsService {
     private dataSource: DataSource,
     @Inject(forwardRef(() => BillingService))
     private billingService: BillingService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   // ==================== FIND METHODS ====================
@@ -273,7 +276,15 @@ export class ReadingsService {
 
     const readingResponse = await this.findOne(savedReading.readingId);
 
-    // Auto-generate bill if enabled (default: true)
+    // Emit event for asynchronous bill generation
+    this.logger.log(`📤 Emitting meter-reading.created event for reading ${savedReading.readingId}`);
+    this.eventEmitter.emit(
+      'meter-reading.created',
+      new MeterReadingCreatedEvent(savedReading, options),
+    );
+
+    // Legacy synchronous bill generation (kept for backward compatibility)
+    // The event-driven approach will replace this
     const shouldAutoGenerateBill = options?.autoGenerateBill !== false;
     let generatedBill: { billId: number; totalAmount: number } | undefined;
 

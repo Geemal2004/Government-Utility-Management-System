@@ -248,7 +248,7 @@ export class ConnectionsService {
 
     // Validate meter reassignment if meter is being changed
     if (updateDto.meterId && updateDto.meterId !== existingConnection.meterId) {
-      await this.validateMeterAvailability(updateDto.meterId);
+      await this.validateMeterAvailability(updateDto.meterId, id);
     }
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -481,7 +481,10 @@ export class ConnectionsService {
   /**
    * Private helper: Validate meter availability
    */
-  private async validateMeterAvailability(meterId: number): Promise<void> {
+  private async validateMeterAvailability(
+    meterId: number,
+    excludeConnectionId?: number,
+  ): Promise<void> {
     const meter = await this.meterRepository.findOne({
       where: { meterId },
     });
@@ -491,11 +494,18 @@ export class ConnectionsService {
     }
 
     // Check if meter is already assigned to another connection
+    const whereCondition: any = {
+      meterId,
+      connectionStatus: Not(ConnectionStatus.DISCONNECTED),
+    };
+
+    // Exclude the current connection if provided (for update operations)
+    if (excludeConnectionId) {
+      whereCondition.connectionId = Not(excludeConnectionId);
+    }
+
     const existingConnection = await this.connectionRepository.findOne({
-      where: {
-        meterId,
-        connectionStatus: Not(ConnectionStatus.DISCONNECTED),
-      },
+      where: whereCondition,
     });
 
     if (existingConnection) {

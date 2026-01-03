@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BillingController } from './billing.controller';
 import { BillingService } from './billing.service';
+import { BillingEventListener } from './billing-event.listener';
 import {
   Bill,
   BillDetail,
@@ -35,7 +36,7 @@ import {
     ]),
   ],
   controllers: [BillingController],
-  providers: [BillingService],
+  providers: [BillingService, BillingEventListener],
   exports: [BillingService],
 })
 export class BillingModule {}

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   ArrowLeft,
   Loader2,
@@ -17,7 +17,7 @@ import {
   TrendingUp,
   TrendingDown,
   Activity,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   LineChart,
   Line,
@@ -28,17 +28,17 @@ import {
   Legend,
   ResponsiveContainer,
   ReferenceLine,
-} from "recharts";
-import { readingsApi } from "@/lib/api/readings";
-import { lookupApi } from "@/lib/api/lookup";
+} from 'recharts';
+import { readingsApi } from '@/lib/api/readings';
+import { lookupApi } from '@/lib/api/lookup';
 import {
   MeterReading,
   ReadingSource,
   ConsumptionSummary,
-} from "@/types/reading";
-import { Meter } from "@/types/connection";
-import { PaginationMeta } from "@/types/customer";
-import { useToast } from "@/components/ui/toast";
+} from '@/types/reading';
+import { Meter } from '@/types/connection';
+import { PaginationMeta } from '@/types/customer';
+import { useToast } from '@/components/ui/toast';
 
 interface MeterWithDetails extends Meter {
   serviceConnection?: {
@@ -80,10 +80,10 @@ export default function MeterHistoryPage() {
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
     date.setMonth(date.getMonth() - 6); // Last 6 months
-    return date.toISOString().split("T")[0];
+    return date.toISOString().split('T')[0];
   });
   const [endDate, setEndDate] = useState(
-    () => new Date().toISOString().split("T")[0],
+    () => new Date().toISOString().split('T')[0],
   );
 
   /**
@@ -97,7 +97,7 @@ export default function MeterHistoryPage() {
           setMeter(response.data as MeterWithDetails);
         }
       } catch (err) {
-        console.error("Error fetching meter:", err);
+        console.error('Error fetching meter:', err);
       }
     };
 
@@ -118,8 +118,8 @@ export default function MeterHistoryPage() {
         const response = await readingsApi.getByMeter(meterId, {
           page,
           limit: 20,
-          sortBy: "readingDate",
-          order: "DESC",
+          sortBy: 'readingDate',
+          order: 'DESC',
           startDate,
           endDate,
         });
@@ -128,11 +128,11 @@ export default function MeterHistoryPage() {
           setReadings(response.data.items);
           setMeta(response.data.meta);
         } else {
-          setError(response.error || "Failed to fetch readings");
+          setError(response.error || 'Failed to fetch readings');
         }
       } catch (err) {
-        console.error("Error fetching readings:", err);
-        setError("Failed to fetch readings. Please try again.");
+        console.error('Error fetching readings:', err);
+        setError('Failed to fetch readings. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -158,7 +158,7 @@ export default function MeterHistoryPage() {
           setConsumptionSummary(response.data);
         }
       } catch (err) {
-        console.error("Error fetching consumption summary:", err);
+        console.error('Error fetching consumption summary:', err);
       }
     };
 
@@ -175,18 +175,16 @@ export default function MeterHistoryPage() {
       .slice()
       .reverse()
       .map((reading) => ({
-        date: new Date(reading.readingDate).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
+        date: new Date(reading.readingDate).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
         }),
         consumption: reading.consumption || 0,
         reading: reading.importReading,
         isAbnormal:
           reading.consumption &&
           consumptionSummary &&
-          Math.abs(
-            reading.consumption - consumptionSummary.averageConsumption,
-          ) >
+          Math.abs(reading.consumption - consumptionSummary.averageConsumption) >
             consumptionSummary.averageConsumption * 0.5,
       }));
   }, [readings, consumptionSummary]);
@@ -226,10 +224,8 @@ export default function MeterHistoryPage() {
       totalConsumption,
       averageConsumption:
         consumptions.length > 0 ? totalConsumption / consumptions.length : 0,
-      highestConsumption:
-        consumptions.length > 0 ? Math.max(...consumptions) : 0,
-      lowestConsumption:
-        consumptions.length > 0 ? Math.min(...consumptions) : 0,
+      highestConsumption: consumptions.length > 0 ? Math.max(...consumptions) : 0,
+      lowestConsumption: consumptions.length > 0 ? Math.min(...consumptions) : 0,
       readingCount: readings.length,
       last30DaysConsumption,
     };
@@ -247,18 +243,18 @@ export default function MeterHistoryPage() {
       });
 
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.download = `meter-${meter?.meterSerialNo || meterId}-history-${new Date().toISOString().split("T")[0]}.csv`;
+      link.download = `meter-${meter?.meterSerialNo || meterId}-history-${new Date().toISOString().split('T')[0]}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      addToast("success", "Success", "Readings exported successfully");
+      addToast('success', 'Success', 'Readings exported successfully');
     } catch (err) {
-      console.error("Error exporting readings:", err);
-      addToast("error", "Error", "Failed to export readings");
+      console.error('Error exporting readings:', err);
+      addToast('error', 'Error', 'Failed to export readings');
     }
   };
 
@@ -268,15 +264,15 @@ export default function MeterHistoryPage() {
   const getSourceBadgeColor = (source: ReadingSource) => {
     switch (source) {
       case ReadingSource.MANUAL:
-        return "bg-blue-100 text-blue-800";
+        return 'bg-blue-100 text-blue-800';
       case ReadingSource.AUTOMATIC:
-        return "bg-green-100 text-green-800";
+        return 'bg-green-100 text-green-800';
       case ReadingSource.ESTIMATED:
-        return "bg-yellow-100 text-yellow-800";
+        return 'bg-yellow-100 text-yellow-800';
       case ReadingSource.CORRECTED:
-        return "bg-purple-100 text-purple-800";
+        return 'bg-purple-100 text-purple-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -284,12 +280,12 @@ export default function MeterHistoryPage() {
    * Format date
    */
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Date(dateString).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -394,7 +390,7 @@ export default function MeterHistoryPage() {
                   {meter.serviceConnection.connectionAddress.line1}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {meter.serviceConnection.connectionAddress.city},{" "}
+                  {meter.serviceConnection.connectionAddress.city},{' '}
                   {meter.serviceConnection.connectionAddress.postalCode}
                 </p>
               </div>
@@ -418,10 +414,10 @@ export default function MeterHistoryPage() {
                 Installation Date
               </p>
               <p className="text-lg font-semibold text-gray-900">
-                {new Date(meter.installationDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
+                {new Date(meter.installationDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
                 })}
               </p>
             </div>
@@ -429,16 +425,14 @@ export default function MeterHistoryPage() {
             <div>
               <p className="text-sm text-gray-600 mb-1">Meter Type</p>
               <p className="text-lg font-semibold text-gray-900">
-                {meter.isSmartMeter ? "Smart Meter" : "Standard Meter"}
+                {meter.isSmartMeter ? 'Smart Meter' : 'Standard Meter'}
               </p>
             </div>
 
             {readings.length > 0 && (
               <>
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">
-                    Last Reading Date
-                  </p>
+                  <p className="text-sm text-gray-600 mb-1">Last Reading Date</p>
                   <p className="text-lg font-semibold text-gray-900">
                     {formatDate(readings[0].readingDate)}
                   </p>
@@ -469,7 +463,7 @@ export default function MeterHistoryPage() {
             {statistics.totalConsumption.toLocaleString()}
           </p>
           <p className="text-xs text-gray-500 mt-1">
-            {meter?.utilityType?.unit || "units"}
+            {meter?.utilityType?.unit || 'units'}
           </p>
         </div>
 
@@ -536,7 +530,7 @@ export default function MeterHistoryPage() {
             {statistics.last30DaysConsumption.toLocaleString()}
           </p>
           <p className="text-xs text-gray-500 mt-1">
-            {meter?.utilityType?.unit || "units"}
+            {meter?.utilityType?.unit || 'units'}
           </p>
         </div>
       </div>
@@ -567,7 +561,7 @@ export default function MeterHistoryPage() {
                 setEndDate(e.target.value);
                 setPage(1);
               }}
-              max={new Date().toISOString().split("T")[0]}
+              max={new Date().toISOString().split('T')[0]}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -576,8 +570,8 @@ export default function MeterHistoryPage() {
             onClick={() => {
               const date = new Date();
               date.setMonth(date.getMonth() - 6);
-              setStartDate(date.toISOString().split("T")[0]);
-              setEndDate(new Date().toISOString().split("T")[0]);
+              setStartDate(date.toISOString().split('T')[0]);
+              setEndDate(new Date().toISOString().split('T')[0]);
               setPage(1);
             }}
             className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 underline"
@@ -589,8 +583,8 @@ export default function MeterHistoryPage() {
             onClick={() => {
               const date = new Date();
               date.setFullYear(date.getFullYear() - 1);
-              setStartDate(date.toISOString().split("T")[0]);
-              setEndDate(new Date().toISOString().split("T")[0]);
+              setStartDate(date.toISOString().split('T')[0]);
+              setEndDate(new Date().toISOString().split('T')[0]);
               setPage(1);
             }}
             className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 underline"
@@ -612,16 +606,16 @@ export default function MeterHistoryPage() {
               <XAxis dataKey="date" />
               <YAxis
                 label={{
-                  value: meter?.utilityType?.unit || "Units",
+                  value: meter?.utilityType?.unit || 'Units',
                   angle: -90,
-                  position: "insideLeft",
+                  position: 'insideLeft',
                 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "0.5rem",
+                  backgroundColor: 'white',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '0.5rem',
                 }}
               />
               <Legend />
@@ -646,7 +640,7 @@ export default function MeterHistoryPage() {
                       cx={cx}
                       cy={cy}
                       r={payload.isAbnormal ? 6 : 4}
-                      fill={payload.isAbnormal ? "#ef4444" : "#3b82f6"}
+                      fill={payload.isAbnormal ? '#ef4444' : '#3b82f6'}
                       stroke="white"
                       strokeWidth={2}
                     />
@@ -748,22 +742,22 @@ export default function MeterHistoryPage() {
                     <td
                       className={`px-6 py-4 whitespace-nowrap text-sm text-right font-mono ${
                         reading.consumption && reading.consumption < 0
-                          ? "text-red-600 font-semibold"
-                          : ""
+                          ? 'text-red-600 font-semibold'
+                          : ''
                       }`}
                     >
                       {reading.consumption !== null ? (
                         <span
                           className={
                             reading.consumption < 0
-                              ? "bg-red-100 px-2 py-1 rounded"
-                              : ""
+                              ? 'bg-red-100 px-2 py-1 rounded'
+                              : ''
                           }
                         >
                           {reading.consumption.toLocaleString()}
                         </span>
                       ) : (
-                        "-"
+                        '-'
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -778,7 +772,7 @@ export default function MeterHistoryPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {reading.reader?.employee
                         ? `${reading.reader.employee.firstName} ${reading.reader.employee.lastName}`
-                        : "-"}
+                        : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                       <Link
@@ -799,14 +793,14 @@ export default function MeterHistoryPage() {
           {meta && meta.totalPages > 1 && (
             <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
               <div className="text-sm text-gray-700">
-                Showing{" "}
+                Showing{' '}
                 <span className="font-medium">
                   {(meta.page - 1) * meta.limit + 1}
-                </span>{" "}
-                to{" "}
+                </span>{' '}
+                to{' '}
                 <span className="font-medium">
                   {Math.min(meta.page * meta.limit, meta.total)}
-                </span>{" "}
+                </span>{' '}
                 of <span className="font-medium">{meta.total}</span> results
               </div>
               <div className="flex items-center gap-2">
@@ -821,9 +815,7 @@ export default function MeterHistoryPage() {
                   Page {meta.page} of {meta.totalPages}
                 </span>
                 <button
-                  onClick={() =>
-                    setPage((p) => Math.min(meta.totalPages, p + 1))
-                  }
+                  onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
                   disabled={!meta.hasNextPage}
                   className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >

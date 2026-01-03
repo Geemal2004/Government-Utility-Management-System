@@ -1064,9 +1064,8 @@ export class BillingService {
       let periodStart: Date;
 
       if (lastBill) {
-        // Continue from last bill's end date
+        // Period starts from the last bill's end date (inclusive) to capture the ending reading as the starting reading
         periodStart = new Date(lastBill.billingPeriodEnd);
-        periodStart.setDate(periodStart.getDate() + 1);
 
         // Check if enough time has passed since last bill
         const daysSinceLastBill = Math.ceil(
@@ -1107,13 +1106,14 @@ export class BillingService {
       this.logger.log(
         `🔍 Checking readings between ${periodStart.toISOString()} and ${readingDate.toISOString()}`,
       );
-      const readings = await this.readingRepository.find({
-        where: {
-          meterId,
-          readingDate: Between(periodStart, readingDate),
-        },
-        order: { readingDate: 'ASC' },
-      });
+      // Get all readings from period start (inclusive) to current reading date (inclusive)
+      const readings = await this.readingRepository
+        .createQueryBuilder('reading')
+        .where('reading.meterId = :meterId', { meterId })
+        .andWhere('reading.readingDate >= :periodStart', { periodStart })
+        .andWhere('reading.readingDate <= :readingDate', { readingDate })
+        .orderBy('reading.readingDate', 'ASC')
+        .getMany();
 
       this.logger.log(`   Found ${readings.length} readings in billing period`);
 
