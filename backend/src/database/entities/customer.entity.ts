@@ -3,6 +3,8 @@ import { Exclude } from 'class-transformer';
 import { CustomerAddress } from './customer-address.entity';
 import { CustomerPhone } from './customer-phone.entity';
 import { Employee } from './employee.entity';
+import { TariffCategory } from './tariff-category.entity';
+import { ServiceConnection } from './service-connection.entity';
 
 /**
  * Customer entity mapping to the Customer table in SQL Server
@@ -58,8 +60,15 @@ export class Customer {
   @JoinColumn({ name: 'employee_id' })
   registeredBy: Employee;
 
+  @ManyToOne(() => TariffCategory, { nullable: true })
+  @JoinColumn({ name: 'tariff_category_id' })
+  tariffCategory: TariffCategory | null;
+
   @OneToMany(() => CustomerPhone, (phone) => phone.customer, { eager: true })
   phoneNumbers: CustomerPhone[];
+
+  @OneToMany(() => ServiceConnection, (connection) => connection.customer)
+  serviceConnections: ServiceConnection[];
 
   /**
    * Get full name of the customer

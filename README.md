@@ -1,8 +1,8 @@
-# Government Utility Management System
+# Government Utility Management System 
 
 A comprehensive full-stack application for managing water, electricity, and gas utilities including customer management, billing, meter reading, payments, work orders, inventory, and HR/payroll.
 
-## Project Structure
+## Project Structure confirmed 
 
 ```
 GOVERNMENT UTILITY MANAGEMENT SYSTEM/

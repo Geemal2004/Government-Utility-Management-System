@@ -8,7 +8,9 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-export * from './customer';
+export * from "./customer";
+export * from "./connection";
+export * from "./reading";
 
 /**
  * Paginated response type
@@ -58,7 +60,12 @@ export interface LoginResponse {
 /**
  * User roles
  */
-export type UserRole = 'Manager' | 'FieldOfficer' | 'Cashier' | 'Admin' | 'MeterReader';
+export type UserRole =
+  | "Manager"
+  | "FieldOfficer"
+  | "Cashier"
+  | "Admin"
+  | "MeterReader";
 
 /**
  * Auth state type

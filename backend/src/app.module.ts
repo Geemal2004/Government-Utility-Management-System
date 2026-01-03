@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './auth/auth.module';
 import { EmployeesModule } from './employees/employees.module';
 import { CustomersModule } from './customers/customers.module';
+import { ConnectionsModule } from './connections/connections.module';
+import { LookupModule } from './lookup/lookup.module';
 import { DatabaseModule } from './database/database.module';
+import { ReadingsModule } from './readings/readings.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [
@@ -12,6 +17,18 @@ import { DatabaseModule } from './database/database.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+
+    // Event Emitter Module for event-driven architecture
+    EventEmitterModule.forRoot({
+      // Use this name if you want wildcards
+      wildcard: false,
+      // The delimiter used to segment namespaces
+      delimiter: '.',
+      // Set this to `true` to use wildcards
+      newListener: false,
+      // Set this to `true` to ignore listener errors
+      ignoreErrors: false,
     }),
 
     // TypeORM module with SQL Server configuration
@@ -45,6 +62,10 @@ import { DatabaseModule } from './database/database.module';
     AuthModule,
     EmployeesModule,
     CustomersModule,
+    ConnectionsModule,
+    LookupModule,
+    ReadingsModule,
+    BillingModule,
   ],
 })
 export class AppModule {}
