@@ -103,12 +103,9 @@ export class BillingService {
     const lastReading = readings[readings.length - 1];
 
     // Step c) Calculate consumption: lastReading - firstReading
-    const consumption =
-      (lastReading.importReading || 0) -
-      (firstReading.prevImportReading || firstReading.importReading || 0);
-    const exportUnits =
-      (lastReading.exportReading || 0) -
-      (firstReading.prevExportReading || firstReading.exportReading || 0);
+    // For billing period with multiple readings, use the first reading's current value as starting point
+    const consumption = (lastReading.importReading || 0) - (firstReading.importReading || 0);
+    const exportUnits = (lastReading.exportReading || 0) - (firstReading.exportReading || 0);
 
     // Step d) If consumption < 0, throw error (invalid readings)
     if (consumption < 0) {
@@ -159,6 +156,8 @@ export class BillingService {
 
     // Step o) Return BillCalculationDto
     return {
+      startReading: this.roundAmount(firstReading.importReading || 0),
+      endReading: this.roundAmount(lastReading.importReading || 0),
       consumption: this.roundAmount(consumption),
       slabBreakdown: slabResult.slabs,
       energyCharge: this.roundAmount(slabResult.energyCharge),
@@ -412,7 +411,7 @@ export class BillingService {
         billingPeriodEnd: periodEnd,
         billDate: new Date(),
         dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
-        totalImportUnit: calculation.consumption,
+        totalImportUnit: calculation.consumption, // Total consumption (new reading - previous reading)
         totalExportUnit: 0, // TODO: Get from calculation when available
         energyChargeAmount: calculation.energyCharge,
         fixedChargeAmount: calculation.fixedCharge,

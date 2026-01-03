@@ -283,50 +283,9 @@ export class ReadingsService {
       new MeterReadingCreatedEvent(savedReading, options),
     );
 
-    // Legacy synchronous bill generation (kept for backward compatibility)
-    // The event-driven approach will replace this
-    const shouldAutoGenerateBill = options?.autoGenerateBill !== false;
-    let generatedBill: { billId: number; totalAmount: number } | undefined;
-
-    this.logger.log(
-      `Auto-generation check: shouldAutoGenerateBill=${shouldAutoGenerateBill}, options=${JSON.stringify(options)}`,
-    );
-
-    if (shouldAutoGenerateBill) {
-      try {
-        this.logger.log(`Attempting to generate bill for meter ${createDto.meterId}...`);
-        const bill = await this.billingService.generateBillFromReading(
-          createDto.meterId,
-          new Date(createDto.readingDate),
-          {
-            minDaysBetweenBills: options?.minDaysBetweenBills,
-            dueDaysFromBillDate: options?.dueDaysFromBillDate,
-          },
-        );
-
-        if (bill) {
-          generatedBill = {
-            billId: bill.billId,
-            totalAmount: bill.getTotalAmount(),
-          };
-          this.logger.log(
-            `✅ Auto-generated bill ${bill.billId} for meter ${createDto.meterId} after reading ${savedReading.readingId}. Amount: ${bill.getTotalAmount()}`,
-          );
-        } else {
-          this.logger.warn(
-            `⚠️ Bill generation returned null for meter ${createDto.meterId}. Check eligibility criteria.`,
-          );
-        }
-      } catch (error) {
-        // Log error but don't fail the reading creation
-        this.logger.error(
-          `❌ Failed to auto-generate bill for meter ${createDto.meterId}: ${error.message}`,
-        );
-        this.logger.error(error.stack);
-      }
-    } else {
-      this.logger.log(`Auto-generation disabled for meter ${createDto.meterId}`);
-    }
+    // Legacy synchronous bill generation has been removed in favor of event-driven approach
+    // Bills are now generated asynchronously via BillingEventListener
+    const generatedBill: { billId: number; totalAmount: number } | undefined = undefined;
 
     return { ...readingResponse, generatedBill };
   }

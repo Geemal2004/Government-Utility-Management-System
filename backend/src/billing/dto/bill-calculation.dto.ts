@@ -74,6 +74,20 @@ export class TaxBreakdownDto {
  */
 export class BillCalculationDto {
   @ApiProperty({
+    description: 'Starting meter reading',
+    example: 100.0,
+  })
+  @Expose()
+  startReading: number;
+
+  @ApiProperty({
+    description: 'Ending meter reading',
+    example: 250.0,
+  })
+  @Expose()
+  endReading: number;
+
+  @ApiProperty({
     description: 'Total consumption in units',
     example: 150.0,
   })
