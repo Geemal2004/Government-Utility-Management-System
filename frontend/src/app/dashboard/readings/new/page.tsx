@@ -71,12 +71,12 @@ export default function NewReadingPage() {
   const [meters, setMeters] = useState<MeterWithDetails[]>([]);
   const [utilityTypes, setUtilityTypes] = useState<UtilityTypeDetails[]>([]);
   const [selectedUtilityType, setSelectedUtilityType] = useState<number | null>(
-    null,
+    null
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingMeters, setLoadingMeters] = useState(false);
   const [selectedMeter, setSelectedMeter] = useState<MeterWithDetails | null>(
-    null,
+    null
   );
   const [latestReading, setLatestReading] = useState<MeterReading | null>(null);
   const [loadingLatestReading, setLoadingLatestReading] = useState(false);
@@ -121,7 +121,7 @@ export default function NewReadingPage() {
       try {
         setLoadingMeters(true);
         const response = await lookupApi.getMeters(
-          selectedUtilityType || undefined,
+          selectedUtilityType || undefined
         );
         if (response.success) {
           setMeters(response.data);
@@ -211,7 +211,7 @@ export default function NewReadingPage() {
       if (calculatedConsumption !== null && calculatedConsumption < 0) {
         if (watchReadingSource !== ReadingSource.CORRECTED) {
           errors.push(
-            "Consumption cannot be negative (use CORRECTED source for adjustments)",
+            "Consumption cannot be negative (use CORRECTED source for adjustments)"
           );
         } else {
           warnings.push("Negative consumption detected (correction mode)");
@@ -225,11 +225,15 @@ export default function NewReadingPage() {
           const ratio = calculatedConsumption / prevConsumption;
           if (ratio > 2.0) {
             warnings.push(
-              `Consumption is ${(ratio * 100).toFixed(0)}% higher than previous reading`,
+              `Consumption is ${(ratio * 100).toFixed(
+                0
+              )}% higher than previous reading`
             );
           } else if (ratio < 0.5 && calculatedConsumption > 0) {
             warnings.push(
-              `Consumption is ${((1 - ratio) * 100).toFixed(0)}% lower than previous reading`,
+              `Consumption is ${((1 - ratio) * 100).toFixed(
+                0
+              )}% lower than previous reading`
             );
           }
         }
@@ -242,7 +246,7 @@ export default function NewReadingPage() {
         watchReadingSource !== ReadingSource.CORRECTED
       ) {
         errors.push(
-          "New reading cannot be lower than previous reading (use CORRECTED source)",
+          "New reading cannot be lower than previous reading (use CORRECTED source)"
         );
       }
 
@@ -272,7 +276,7 @@ export default function NewReadingPage() {
       addToast(
         "error",
         "Validation Failed",
-        "Please fix the errors before saving",
+        "Please fix the errors before saving"
       );
       return;
     }
@@ -305,7 +309,7 @@ export default function NewReadingPage() {
    * Filter meters by search query
    */
   const filteredMeters = meters.filter((meter) =>
-    meter.meterSerialNo.toLowerCase().includes(searchQuery.toLowerCase()),
+    meter.meterSerialNo.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   /**
@@ -374,7 +378,7 @@ export default function NewReadingPage() {
                 value={selectedUtilityType || ""}
                 onChange={(e) =>
                   setSelectedUtilityType(
-                    e.target.value ? Number(e.target.value) : null,
+                    e.target.value ? Number(e.target.value) : null
                   )
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -678,9 +682,9 @@ export default function NewReadingPage() {
                   calculatedConsumption !== null && calculatedConsumption < 0
                     ? "bg-red-50"
                     : calculatedConsumption !== null &&
-                        calculatedConsumption > 0
-                      ? "bg-green-50"
-                      : "bg-gray-50"
+                      calculatedConsumption > 0
+                    ? "bg-green-50"
+                    : "bg-gray-50"
                 }`}
               >
                 <p className="text-sm text-gray-600 mb-1">Consumption</p>
@@ -689,9 +693,9 @@ export default function NewReadingPage() {
                     calculatedConsumption !== null && calculatedConsumption < 0
                       ? "text-red-600"
                       : calculatedConsumption !== null &&
-                          calculatedConsumption > 0
-                        ? "text-green-600"
-                        : "text-gray-900"
+                        calculatedConsumption > 0
+                      ? "text-green-600"
+                      : "text-gray-900"
                   }`}
                 >
                   {calculatedConsumption !== null
@@ -718,8 +722,8 @@ export default function NewReadingPage() {
                     validationResult.warnings.length === 0
                       ? "bg-green-50 border border-green-200"
                       : validationResult.isValid
-                        ? "bg-yellow-50 border border-yellow-200"
-                        : "bg-red-50 border border-red-200"
+                      ? "bg-yellow-50 border border-yellow-200"
+                      : "bg-red-50 border border-red-200"
                   }`}
                 >
                   {getValidationIcon()}
@@ -730,16 +734,16 @@ export default function NewReadingPage() {
                         validationResult.warnings.length === 0
                           ? "text-green-900"
                           : validationResult.isValid
-                            ? "text-yellow-900"
-                            : "text-red-900"
+                          ? "text-yellow-900"
+                          : "text-red-900"
                       }`}
                     >
                       {validationResult.isValid &&
                       validationResult.warnings.length === 0
                         ? "Reading is valid"
                         : validationResult.isValid
-                          ? "Reading is valid with warnings"
-                          : "Reading has errors"}
+                        ? "Reading is valid with warnings"
+                        : "Reading has errors"}
                     </h3>
                     <p
                       className={`text-sm mt-1 ${
@@ -747,16 +751,16 @@ export default function NewReadingPage() {
                         validationResult.warnings.length === 0
                           ? "text-green-700"
                           : validationResult.isValid
-                            ? "text-yellow-700"
-                            : "text-red-700"
+                          ? "text-yellow-700"
+                          : "text-red-700"
                       }`}
                     >
                       {validationResult.isValid &&
                       validationResult.warnings.length === 0
                         ? "This reading passes all validation checks"
                         : validationResult.isValid
-                          ? "This reading can be saved but has some warnings"
-                          : "Please fix the errors below before saving"}
+                        ? "This reading can be saved but has some warnings"
+                        : "Please fix the errors below before saving"}
                     </p>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   X,
   Loader2,
@@ -18,10 +18,10 @@ import {
   Download,
   CheckCircle,
   Clock,
-} from 'lucide-react';
-import { readingsApi } from '@/lib/api/readings';
-import { MeterReading, ReadingSource } from '@/types/reading';
-import { useToast } from './ui/toast';
+} from "lucide-react";
+import { readingsApi } from "@/lib/api/readings";
+import { MeterReading, ReadingSource } from "@/types/reading";
+import { useToast } from "./ui/toast";
 
 interface ReadingDetailModalProps {
   readingId: number | null;
@@ -29,7 +29,7 @@ interface ReadingDetailModalProps {
   onClose: () => void;
   onDeleted?: () => void;
   onEdit?: () => void;
-  userRole?: 'Admin' | 'Manager' | 'FieldOfficer' | 'Cashier' | 'MeterReader';
+  userRole?: "Admin" | "Manager" | "FieldOfficer" | "Cashier" | "MeterReader";
 }
 
 export default function ReadingDetailModal({
@@ -38,7 +38,7 @@ export default function ReadingDetailModal({
   onClose,
   onDeleted,
   onEdit,
-  userRole = 'MeterReader',
+  userRole = "MeterReader",
 }: ReadingDetailModalProps) {
   const { addToast } = useToast();
   const [reading, setReading] = useState<MeterReading | null>(null);
@@ -47,7 +47,7 @@ export default function ReadingDetailModal({
   const [deleting, setDeleting] = useState(false);
 
   // Check if user can edit/delete
-  const canEdit = userRole === 'Admin' || userRole === 'Manager';
+  const canEdit = userRole === "Admin" || userRole === "Manager";
 
   /**
    * Fetch reading details
@@ -68,11 +68,11 @@ export default function ReadingDetailModal({
         if (response.success) {
           setReading(response.data);
         } else {
-          setError(response.error || 'Failed to fetch reading details');
+          setError(response.error || "Failed to fetch reading details");
         }
       } catch (err) {
-        console.error('Error fetching reading:', err);
-        setError('Failed to fetch reading details. Please try again.');
+        console.error("Error fetching reading:", err);
+        setError("Failed to fetch reading details. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -89,7 +89,7 @@ export default function ReadingDetailModal({
 
     if (
       !confirm(
-        'Are you sure you want to delete this reading? This action cannot be undone.',
+        "Are you sure you want to delete this reading? This action cannot be undone."
       )
     ) {
       return;
@@ -100,15 +100,19 @@ export default function ReadingDetailModal({
       const response = await readingsApi.delete(reading.readingId);
 
       if (response.success) {
-        addToast('success', 'Success', 'Reading deleted successfully');
+        addToast("success", "Success", "Reading deleted successfully");
         onDeleted?.();
         onClose();
       } else {
-        addToast('error', 'Error', response.error || 'Failed to delete reading');
+        addToast(
+          "error",
+          "Error",
+          response.error || "Failed to delete reading"
+        );
       }
     } catch (err) {
-      console.error('Error deleting reading:', err);
-      addToast('error', 'Error', 'Failed to delete reading. Please try again.');
+      console.error("Error deleting reading:", err);
+      addToast("error", "Error", "Failed to delete reading. Please try again.");
     } finally {
       setDeleting(false);
     }
@@ -121,31 +125,31 @@ export default function ReadingDetailModal({
     switch (source) {
       case ReadingSource.MANUAL:
         return {
-          color: 'bg-blue-100 text-blue-800',
+          color: "bg-blue-100 text-blue-800",
           icon: <User className="h-4 w-4" />,
-          label: 'Manual Reading',
+          label: "Manual Reading",
         };
       case ReadingSource.AUTOMATIC:
         return {
-          color: 'bg-green-100 text-green-800',
+          color: "bg-green-100 text-green-800",
           icon: <Zap className="h-4 w-4" />,
-          label: 'Automatic/Smart Meter',
+          label: "Automatic/Smart Meter",
         };
       case ReadingSource.ESTIMATED:
         return {
-          color: 'bg-yellow-100 text-yellow-800',
+          color: "bg-yellow-100 text-yellow-800",
           icon: <TrendingUp className="h-4 w-4" />,
-          label: 'Estimated',
+          label: "Estimated",
         };
       case ReadingSource.CORRECTED:
         return {
-          color: 'bg-purple-100 text-purple-800',
+          color: "bg-purple-100 text-purple-800",
           icon: <Edit className="h-4 w-4" />,
-          label: 'Corrected',
+          label: "Corrected",
         };
       default:
         return {
-          color: 'bg-gray-100 text-gray-800',
+          color: "bg-gray-100 text-gray-800",
           icon: <FileText className="h-4 w-4" />,
           label: source,
         };
@@ -156,12 +160,12 @@ export default function ReadingDetailModal({
    * Format date
    */
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -169,10 +173,10 @@ export default function ReadingDetailModal({
    * Format date for display
    */
   const formatShortDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -180,7 +184,7 @@ export default function ReadingDetailModal({
 
   const sourceBadge = reading
     ? getSourceBadge(reading.readingSource)
-    : { color: '', icon: null, label: '' };
+    : { color: "", icon: null, label: "" };
 
   return (
     <>
@@ -264,7 +268,9 @@ export default function ReadingDetailModal({
                           className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${sourceBadge.color}`}
                         >
                           {sourceBadge.icon}
-                          <span className="font-medium">{sourceBadge.label}</span>
+                          <span className="font-medium">
+                            {sourceBadge.label}
+                          </span>
                         </div>
                       </div>
                       {reading.gpsLatitude && reading.gpsLongitude && (
@@ -274,7 +280,7 @@ export default function ReadingDetailModal({
                             GPS Location
                           </p>
                           <p className="text-sm text-gray-900">
-                            {reading.gpsLatitude.toFixed(6)},{' '}
+                            {reading.gpsLatitude.toFixed(6)},{" "}
                             {reading.gpsLongitude.toFixed(6)}
                           </p>
                         </div>
@@ -321,7 +327,10 @@ export default function ReadingDetailModal({
                               href={`/dashboard/customers/${reading.meter.serviceConnection.customer.customerId}`}
                               className="text-lg font-semibold text-blue-600 hover:text-blue-800"
                             >
-                              {reading.meter.serviceConnection.customer.fullName}
+                              {
+                                reading.meter.serviceConnection.customer
+                                  .fullName
+                              }
                             </Link>
                           </div>
                         )}
@@ -373,8 +382,8 @@ export default function ReadingDetailModal({
                         <div
                           className={`bg-white rounded-lg p-4 border-2 ${
                             reading.consumption < 0
-                              ? 'border-red-300 bg-red-50'
-                              : 'border-green-300 bg-green-50'
+                              ? "border-red-300 bg-red-50"
+                              : "border-green-300 bg-green-50"
                           }`}
                         >
                           <p className="text-sm text-gray-600 mb-1">
@@ -383,8 +392,8 @@ export default function ReadingDetailModal({
                           <p
                             className={`text-4xl font-bold ${
                               reading.consumption < 0
-                                ? 'text-red-600'
-                                : 'text-green-600'
+                                ? "text-red-600"
+                                : "text-green-600"
                             }`}
                           >
                             {reading.consumption.toLocaleString()}
@@ -420,7 +429,7 @@ export default function ReadingDetailModal({
                             Reader Name
                           </p>
                           <p className="text-lg font-semibold text-gray-900">
-                            {reading.reader.employee.firstName}{' '}
+                            {reading.reader.employee.firstName}{" "}
                             {reading.reader.employee.lastName}
                           </p>
                         </div>

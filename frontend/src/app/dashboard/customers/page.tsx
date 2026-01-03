@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Plus,
@@ -14,23 +14,25 @@ import {
   Users,
   Loader2,
   AlertCircle,
-} from 'lucide-react';
-import { customersApi, CustomersQueryParams } from '@/lib/api/customers';
-import { Customer, CustomerType, PaginatedResponse } from '@/types/customer';
-import { useToast } from '@/components/ui/toast';
+} from "lucide-react";
+import { customersApi, CustomersQueryParams } from "@/lib/api/customers";
+import { Customer, CustomerType, PaginatedResponse } from "@/types/customer";
+import { useToast } from "@/components/ui/toast";
 
 export default function CustomersPage() {
   const router = useRouter();
   const { addToast } = useToast();
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [meta, setMeta] = useState<PaginatedResponse<Customer>['meta'] | null>(null);
+  const [meta, setMeta] = useState<PaginatedResponse<Customer>["meta"] | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<number | null>(null);
 
   // Filters
-  const [search, setSearch] = useState('');
-  const [customerType, setCustomerType] = useState<string>('');
+  const [search, setSearch] = useState("");
+  const [customerType, setCustomerType] = useState<string>("");
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
@@ -42,8 +44,8 @@ export default function CustomersPage() {
       const params: CustomersQueryParams = {
         page,
         limit,
-        sortBy: 'customerId',
-        order: 'DESC',
+        sortBy: "customerId",
+        order: "DESC",
       };
 
       if (search) params.search = search;
@@ -51,14 +53,14 @@ export default function CustomersPage() {
 
       const response = await customersApi.getAll(params);
 
-      console.log('Customers API response:', response);
-      console.log('Response success:', response.success);
-      console.log('Response data:', response.data);
+      console.log("Customers API response:", response);
+      console.log("Response success:", response.success);
+      console.log("Response data:", response.data);
 
       if (response.success && response.data) {
         // Response.data is PaginatedResponse<Customer> with items and meta
         const paginatedData = response.data as any;
-        
+
         let items: Customer[] = [];
         let metaData = null;
 
@@ -80,18 +82,27 @@ export default function CustomersPage() {
           }
         }
 
-        console.log('Setting customers:', items);
-        console.log('Setting meta:', metaData);
+        console.log("Setting customers:", items);
+        console.log("Setting meta:", metaData);
 
         setCustomers(Array.isArray(items) ? items : []);
-        setMeta(metaData || { total: items.length, page, limit, totalPages: 1, hasNextPage: false, hasPreviousPage: false });
+        setMeta(
+          metaData || {
+            total: items.length,
+            page,
+            limit,
+            totalPages: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          }
+        );
       } else {
-        setError(response.error || 'Failed to fetch customers');
+        setError(response.error || "Failed to fetch customers");
         setCustomers([]);
       }
     } catch (err: any) {
-      console.error('Fetch customers error:', err);
-      setError(err.response?.data?.message || 'Failed to fetch customers');
+      console.error("Fetch customers error:", err);
+      setError(err.response?.data?.message || "Failed to fetch customers");
       setCustomers([]);
     } finally {
       setLoading(false);
@@ -118,13 +129,21 @@ export default function CustomersPage() {
       const response = await customersApi.delete(id);
 
       if (response.success) {
-        addToast('success', 'Customer Deleted', `${name} has been deleted successfully`);
+        addToast(
+          "success",
+          "Customer Deleted",
+          `${name} has been deleted successfully`
+        );
         fetchCustomers();
       } else {
-        addToast('error', 'Delete Failed', response.error);
+        addToast("error", "Delete Failed", response.error);
       }
     } catch (err: any) {
-      addToast('error', 'Delete Failed', err.response?.data?.message || 'Failed to delete customer');
+      addToast(
+        "error",
+        "Delete Failed",
+        err.response?.data?.message || "Failed to delete customer"
+      );
     } finally {
       setDeleting(null);
     }
@@ -133,23 +152,23 @@ export default function CustomersPage() {
   const getTypeBadgeColor = (type: CustomerType) => {
     switch (type) {
       case CustomerType.RESIDENTIAL:
-        return 'bg-blue-100 text-blue-800';
+        return "bg-blue-100 text-blue-800";
       case CustomerType.COMMERCIAL:
-        return 'bg-green-100 text-green-800';
+        return "bg-green-100 text-green-800";
       case CustomerType.INDUSTRIAL:
-        return 'bg-purple-100 text-purple-800';
+        return "bg-purple-100 text-purple-800";
       case CustomerType.GOVERNMENT:
-        return 'bg-orange-100 text-orange-800';
+        return "bg-orange-100 text-orange-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -159,7 +178,9 @@ export default function CustomersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Customers</h1>
-          <p className="text-gray-600">Manage customer accounts and information</p>
+          <p className="text-gray-600">
+            Manage customer accounts and information
+          </p>
         </div>
         <Link
           href="/dashboard/customers/new"
@@ -232,11 +253,13 @@ export default function CustomersPage() {
         /* Empty State */
         <div className="bg-white rounded-lg shadow p-8 text-center">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No customers found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No customers found
+          </h3>
           <p className="text-gray-600 mb-4">
             {search || customerType
-              ? 'Try adjusting your search or filter criteria'
-              : 'Get started by adding your first customer'}
+              ? "Try adjusting your search or filter criteria"
+              : "Get started by adding your first customer"}
           </p>
           {!search && !customerType && (
             <Link
@@ -290,17 +313,21 @@ export default function CustomersPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {customer.email || '-'}
+                      {customer.email || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadgeColor(customer.customerType)}`}
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadgeColor(
+                          customer.customerType
+                        )}`}
                       >
                         {customer.customerType}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span className="text-gray-400">{customer.identityType}:</span>{' '}
+                      <span className="text-gray-400">
+                        {customer.identityType}:
+                      </span>{" "}
                       {customer.identityRef}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -323,7 +350,9 @@ export default function CustomersPage() {
                           <Pencil className="h-4 w-4" />
                         </Link>
                         <button
-                          onClick={() => handleDelete(customer.customerId, customer.fullName)}
+                          onClick={() =>
+                            handleDelete(customer.customerId, customer.fullName)
+                          }
                           disabled={deleting === customer.customerId}
                           className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                           title="Delete"
@@ -346,11 +375,14 @@ export default function CustomersPage() {
           {meta && meta.totalPages > 1 && (
             <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
               <div className="text-sm text-gray-700">
-                Showing{' '}
-                <span className="font-medium">{(meta.page - 1) * meta.limit + 1}</span> to{' '}
+                Showing{" "}
+                <span className="font-medium">
+                  {(meta.page - 1) * meta.limit + 1}
+                </span>{" "}
+                to{" "}
                 <span className="font-medium">
                   {Math.min(meta.page * meta.limit, meta.total)}
-                </span>{' '}
+                </span>{" "}
                 of <span className="font-medium">{meta.total}</span> results
               </div>
               <div className="flex items-center gap-2">
@@ -365,7 +397,9 @@ export default function CustomersPage() {
                   Page {meta.page} of {meta.totalPages}
                 </span>
                 <button
-                  onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
+                  onClick={() =>
+                    setPage((p) => Math.min(meta.totalPages, p + 1))
+                  }
                   disabled={!meta.hasNextPage}
                   className="p-2 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >

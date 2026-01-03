@@ -3,12 +3,14 @@
 ## Quick Test Checklist
 
 ### Database Setup
+
 - [ ] Tariff slabs created in database
 - [ ] Tax configs created in database
 - [ ] Test meters exist with active service connections
 - [ ] Test meter readings exist for billing periods
 
 ### API Endpoint Tests
+
 - [ ] Calculate endpoint returns correct breakdown
 - [ ] Progressive slab calculation works correctly
 - [ ] Bill generation saves to database
@@ -17,6 +19,7 @@
 - [ ] Total amount calculated correctly (energy + fixed - subsidy - solar + taxes)
 
 ### Business Logic Tests
+
 - [ ] Slab distribution is correct (consumes lower slabs first)
 - [ ] Fixed charges applied correctly
 - [ ] Subsidies calculated and applied
@@ -28,6 +31,7 @@
 ## 1. Database Setup Verification
 
 ### Step 1: Create Test Tariff Slabs (Residential Electricity)
+
 ```sql
 -- Run in SQL Server Management Studio
 USE UtilityManagementDB;
@@ -40,7 +44,7 @@ DECLARE @TariffCategoryId BIGINT = SCOPE_IDENTITY();
 
 -- Insert Progressive Tariff Slabs
 INSERT INTO TariffSlab (tariff_category_id, from_unit, to_unit, rate_per_unit, fixed_charge)
-VALUES 
+VALUES
   (@TariffCategoryId, 0, 60, 7.85, 100.00),      -- 0-60 units
   (@TariffCategoryId, 61, 90, 10.00, 0.00),      -- 61-90 units
   (@TariffCategoryId, 91, 120, 27.75, 0.00),     -- 91-120 units
@@ -52,6 +56,7 @@ SELECT * FROM TariffSlab WHERE tariff_category_id = @TariffCategoryId ORDER BY f
 ```
 
 ### Step 2: Create Test Tax Configs
+
 ```sql
 -- Create VAT Tax
 INSERT INTO TaxConfig (tax_name, tax_code, rate_percent, is_active, applies_to_utility_types, calculation_order)
@@ -66,9 +71,10 @@ SELECT * FROM TaxConfig WHERE is_active = 1;
 ```
 
 ### Step 3: Verify Test Data
+
 ```sql
 -- Check if test meter exists
-SELECT m.meter_id, m.meter_serial_no, m.status, 
+SELECT m.meter_id, m.meter_serial_no, m.status,
        sc.connection_id, sc.connection_status, sc.tariff_category_id,
        c.customer_id, c.first_name, c.last_name
 FROM Meter m
@@ -77,7 +83,7 @@ INNER JOIN Customer c ON sc.customer_id = c.customer_id
 WHERE m.meter_serial_no = 'ELEC-001-2024';
 
 -- Check if meter readings exist
-SELECT * FROM MeterReading 
+SELECT * FROM MeterReading
 WHERE meter_id = (SELECT meter_id FROM Meter WHERE meter_serial_no = 'ELEC-001-2024')
 ORDER BY reading_date DESC;
 ```
@@ -91,6 +97,7 @@ ORDER BY reading_date DESC;
 **Endpoint:** `POST http://localhost:3000/api/v1/bills/calculate`
 
 **Request Body:**
+
 ```json
 {
   "meterId": 1,
@@ -100,63 +107,65 @@ ORDER BY reading_date DESC;
 ```
 
 **Expected Response (150 units consumption):**
+
 ```json
 {
   "consumption": 150.0,
-  "energyChargeAmount": 2436.00,
-  "fixedChargeAmount": 100.00,
-  "subsidyAmount": 0.00,
-  "solarExportCredit": 0.00,
-  "taxAmount": 443.80,
-  "totalAmount": 2979.80,
+  "energyChargeAmount": 2436.0,
+  "fixedChargeAmount": 100.0,
+  "subsidyAmount": 0.0,
+  "solarExportCredit": 0.0,
+  "taxAmount": 443.8,
+  "totalAmount": 2979.8,
   "slabBreakdown": [
     {
       "from": 0,
       "to": 60,
       "units": 60.0,
       "rate": 7.85,
-      "amount": 471.00
+      "amount": 471.0
     },
     {
       "from": 61,
       "to": 90,
       "units": 30.0,
-      "rate": 10.00,
-      "amount": 300.00
+      "rate": 10.0,
+      "amount": 300.0
     },
     {
       "from": 91,
       "to": 120,
       "units": 30.0,
       "rate": 27.75,
-      "amount": 832.50
+      "amount": 832.5
     },
     {
       "from": 121,
       "to": 180,
       "units": 30.0,
-      "rate": 32.00,
-      "amount": 960.00
+      "rate": 32.0,
+      "amount": 960.0
     }
   ],
   "taxes": [
     {
       "name": "VAT (Value Added Tax)",
       "rate": 15.0,
-      "taxableAmount": 2536.00,
-      "amount": 380.40
+      "taxableAmount": 2536.0,
+      "amount": 380.4
     },
     {
       "name": "Environmental Levy",
       "rate": 2.5,
-      "taxableAmount": 2536.00,
-      "amount": 63.40
+      "taxableAmount": 2536.0,
+      "amount": 63.4
     }
   ]
 }
 ```
 
 **Validation Checklist:**
+
 - [ ] Consumption = 150 units (from meter readings)
 - [ ] Slab 1: 60 units × 7.85 = 471.00 ✓
 - [ ] Slab 2: 30 units × 10.00 = 300.00 ✓
@@ -176,6 +185,7 @@ ORDER BY reading_date DESC;
 **Endpoint:** `POST http://localhost:3000/api/v1/bills`
 
 **Request Body:**
+
 ```json
 {
   "meterId": 1,
@@ -186,6 +196,7 @@ ORDER BY reading_date DESC;
 ```
 
 **Expected Response:**
+
 ```json
 {
   "billId": 1,
@@ -212,6 +223,7 @@ ORDER BY reading_date DESC;
 ```
 
 **Database Verification:**
+
 ```sql
 -- Check Bill record
 SELECT * FROM Bill WHERE bill_id = 1;
@@ -231,22 +243,23 @@ WHERE bt.bill_id = 1
 ORDER BY tc.calculation_order;
 
 -- Verify totals
-SELECT 
+SELECT
   bill_id,
   energy_charge_amount,
   fixed_charge_amount,
   subsidy_amount,
   solar_export_credit,
   (energy_charge_amount + fixed_charge_amount - subsidy_amount - solar_export_credit) AS subtotal,
-  (SELECT SUM(bt.taxable_base_amount * bt.rate_percent_applied / 100) 
+  (SELECT SUM(bt.taxable_base_amount * bt.rate_percent_applied / 100)
    FROM BillTax bt WHERE bt.bill_id = Bill.bill_id) AS total_tax,
   (energy_charge_amount + fixed_charge_amount - subsidy_amount - solar_export_credit +
-   (SELECT SUM(bt.taxable_base_amount * bt.rate_percent_applied / 100) 
+   (SELECT SUM(bt.taxable_base_amount * bt.rate_percent_applied / 100)
     FROM BillTax bt WHERE bt.bill_id = Bill.bill_id)) AS grand_total
 FROM Bill WHERE bill_id = 1;
 ```
 
 **Validation Checklist:**
+
 - [ ] Bill record created in Bill table
 - [ ] 4 BillDetail records created (one per slab used)
 - [ ] 2 BillTax records created (VAT and Environmental Levy)
@@ -261,6 +274,7 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `POST http://localhost:3000/api/v1/bills/bulk`
 
 **Request Body:**
+
 ```json
 {
   "billingPeriodStart": "2024-02-01",
@@ -271,6 +285,7 @@ FROM Bill WHERE bill_id = 1;
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": [
@@ -293,6 +308,7 @@ FROM Bill WHERE bill_id = 1;
 ```
 
 **Validation Checklist:**
+
 - [ ] dryRun: true - No records saved to database
 - [ ] Returns calculation for each meter
 - [ ] Failed array shows meters with errors
@@ -305,12 +321,14 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `GET http://localhost:3000/api/v1/bills/1`
 
 **Expected Response:**
+
 - Complete bill information
 - Slab breakdown in `details` array
 - Tax breakdown in `taxes` array
 - Payment history in `payments` array
 
 **Validation Checklist:**
+
 - [ ] All bill fields populated
 - [ ] Slab breakdown shows 4 entries
 - [ ] Tax breakdown shows 2 entries
@@ -323,6 +341,7 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `GET http://localhost:3000/api/v1/bills?meterId=1&page=1&limit=10`
 
 **Expected Response:**
+
 ```json
 {
   "bills": [...],
@@ -334,6 +353,7 @@ FROM Bill WHERE bill_id = 1;
 ```
 
 **Validation Checklist:**
+
 - [ ] Returns bills for specified meter only
 - [ ] Pagination works correctly
 - [ ] Total count is accurate
@@ -345,18 +365,20 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `GET http://localhost:3000/api/v1/bills/summary?utilityTypeId=1`
 
 **Expected Response:**
+
 ```json
 {
   "totalBills": 5,
-  "totalAmount": 14899.00,
-  "totalPaid": 8000.00,
-  "totalOutstanding": 6899.00,
+  "totalAmount": 14899.0,
+  "totalPaid": 8000.0,
+  "totalOutstanding": 6899.0,
   "overdueBills": 2,
-  "overdueAmount": 3500.00
+  "overdueAmount": 3500.0
 }
 ```
 
 **Validation Checklist:**
+
 - [ ] Counts all bills for utility type
 - [ ] Sums amounts correctly
 - [ ] Outstanding = totalAmount - totalPaid
@@ -369,18 +391,21 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `PUT http://localhost:3000/api/v1/bills/1`
 
 **Request Body:**
+
 ```json
 {
-  "subsidyAmount": 500.00,
+  "subsidyAmount": 500.0,
   "dueDate": "2024-03-15"
 }
 ```
 
 **Expected Behavior:**
+
 - Bill updated with new subsidy and due date
 - Total amount recalculated: 2,979.80 - 500.00 = 2,479.80
 
 **Validation Checklist:**
+
 - [ ] Subsidy applied correctly
 - [ ] Due date updated
 - [ ] Total amount recalculated
@@ -392,11 +417,13 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `POST http://localhost:3000/api/v1/bills/1/recalculate`
 
 **Expected Behavior:**
+
 - Bill recalculated from scratch using current tariffs/taxes
 - Old BillDetails deleted, new ones created
 - Old BillTaxes deleted, new ones created
 
 **Validation Checklist:**
+
 - [ ] Bill amounts updated if tariffs changed
 - [ ] BillDetails regenerated
 - [ ] BillTaxes regenerated
@@ -408,6 +435,7 @@ FROM Bill WHERE bill_id = 1;
 **Endpoint:** `POST http://localhost:3000/api/v1/bills/1/void`
 
 **Request Body:**
+
 ```json
 {
   "reason": "Incorrect meter reading"
@@ -415,10 +443,12 @@ FROM Bill WHERE bill_id = 1;
 ```
 
 **Expected Behavior:**
+
 - Returns HTTP 204 No Content
 - Bill cannot be voided if payments exist
 
 **Database Verification:**
+
 ```sql
 SELECT * FROM Bill WHERE bill_id = 1;
 -- Should still exist but marked as voided in some way (or deleted based on implementation)
@@ -431,6 +461,7 @@ SELECT * FROM Bill WHERE bill_id = 1;
 ### Test Scenario: 200 units consumption
 
 **Expected Slab Distribution:**
+
 1. Slab 1 (0-60): 60 units × 7.85 = 471.00
 2. Slab 2 (61-90): 30 units × 10.00 = 300.00
 3. Slab 3 (91-120): 30 units × 27.75 = 832.50
@@ -440,6 +471,7 @@ SELECT * FROM Bill WHERE bill_id = 1;
 **Total Energy Charge:** 471 + 300 + 832.50 + 1,920 + 900 = **4,423.50**
 
 **Test with API:**
+
 ```json
 {
   "meterId": 1,
@@ -449,6 +481,7 @@ SELECT * FROM Bill WHERE bill_id = 1;
 ```
 
 Verify that:
+
 - [ ] All 5 slabs are used in breakdown
 - [ ] Units sum to 200
 - [ ] Amounts match manual calculation
@@ -459,28 +492,33 @@ Verify that:
 ## 4. Edge Case Tests
 
 ### Test 4.1: Consumption Below First Slab
+
 - **Consumption:** 30 units (0-60 slab)
 - **Expected:** Only first slab used
 - [ ] Only 1 BillDetail record created
 
 ### Test 4.2: Consumption Exactly at Slab Boundary
+
 - **Consumption:** 60 units (exactly first slab)
 - **Expected:** Only first slab, no spillover
 - [ ] Only 1 BillDetail record
 
 ### Test 4.3: Zero Consumption
+
 - **Consumption:** 0 units
 - **Expected:** Only fixed charge, no energy charge
 - [ ] No BillDetail records (or 0 amount)
 - [ ] Fixed charge still applied
 
 ### Test 4.4: Missing Meter Readings
+
 - **Scenario:** No readings in period
 - **Expected:** Error message
 - [ ] Returns 400 Bad Request
 - [ ] Error: "Insufficient readings for billing period"
 
 ### Test 4.5: No Active Tariff
+
 - **Scenario:** Meter has no tariff category
 - **Expected:** Error message
 - [ ] Returns 404 Not Found
@@ -491,8 +529,9 @@ Verify that:
 ## 5. SQL Validation Queries
 
 ### Query 1: Verify Bill Totals
+
 ```sql
-SELECT 
+SELECT
   b.bill_id,
   b.total_import_unit AS consumption,
   b.energy_charge_amount,
@@ -502,19 +541,20 @@ SELECT
   -- Manual total calculation
   (b.energy_charge_amount + b.fixed_charge_amount - b.subsidy_amount - b.solar_export_credit) AS subtotal,
   -- Sum of taxes
-  (SELECT SUM(taxable_base_amount * rate_percent_applied / 100) 
+  (SELECT SUM(taxable_base_amount * rate_percent_applied / 100)
    FROM BillTax WHERE bill_id = b.bill_id) AS tax_total,
   -- Grand total
   (b.energy_charge_amount + b.fixed_charge_amount - b.subsidy_amount - b.solar_export_credit +
-   (SELECT SUM(taxable_base_amount * rate_percent_applied / 100) 
+   (SELECT SUM(taxable_base_amount * rate_percent_applied / 100)
     FROM BillTax WHERE bill_id = b.bill_id)) AS calculated_total
 FROM Bill b
 WHERE b.bill_id = 1;
 ```
 
 ### Query 2: Verify Slab Distribution
+
 ```sql
-SELECT 
+SELECT
   bd.bill_detail_id,
   ts.from_unit,
   ts.to_unit,
@@ -522,7 +562,7 @@ SELECT
   bd.units_in_slab,
   bd.amount,
   (bd.units_in_slab * ts.rate_per_unit) AS expected_amount,
-  CASE 
+  CASE
     WHEN ABS(bd.amount - (bd.units_in_slab * ts.rate_per_unit)) < 0.01 THEN 'MATCH'
     ELSE 'MISMATCH'
   END AS validation
@@ -533,15 +573,16 @@ ORDER BY ts.from_unit;
 ```
 
 ### Query 3: Verify Tax Calculations
+
 ```sql
-SELECT 
+SELECT
   bt.bill_tax_id,
   tc.tax_name,
   bt.rate_percent_applied,
   bt.taxable_base_amount,
   (bt.taxable_base_amount * bt.rate_percent_applied / 100) AS expected_tax,
-  CASE 
-    WHEN ABS((bt.taxable_base_amount * bt.rate_percent_applied / 100) - 
+  CASE
+    WHEN ABS((bt.taxable_base_amount * bt.rate_percent_applied / 100) -
          (bt.taxable_base_amount * bt.rate_percent_applied / 100)) < 0.01 THEN 'MATCH'
     ELSE 'MISMATCH'
   END AS validation
@@ -621,7 +662,7 @@ Import this into Postman for easy testing:
       "name": "Calculate Bill Preview",
       "request": {
         "method": "POST",
-        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"meterId\": 1,\n  \"periodStart\": \"2024-01-01\",\n  \"periodEnd\": \"2024-01-31\"\n}"
@@ -637,7 +678,7 @@ Import this into Postman for easy testing:
       "name": "Generate Bill",
       "request": {
         "method": "POST",
-        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"meterId\": 1,\n  \"billingPeriodStart\": \"2024-01-01\",\n  \"billingPeriodEnd\": \"2024-01-31\",\n  \"dueDate\": \"2024-03-01\"\n}"
@@ -665,9 +706,10 @@ After running all tests, you should have verified:
 ✅ Bill generation creates all related records  
 ✅ API endpoints return correct data  
 ✅ Edge cases are handled properly  
-✅ Totals match manual calculations  
+✅ Totals match manual calculations
 
 **Next Steps:**
+
 1. Run integration tests with Postman
 2. Test with production-like data volumes
 3. Add unit tests for BillingService methods

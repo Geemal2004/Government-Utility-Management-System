@@ -33,22 +33,26 @@ The BillingDashboard component has been integrated into the main dashboard page 
 ## Features
 
 ✅ **4 Statistics Cards**:
+
 - Total Revenue (with trend indicator)
 - Outstanding Bills (clickable)
 - Overdue Amount (clickable)
 - Collection Rate (with progress bar)
 
 ✅ **3 Interactive Charts**:
+
 - Revenue Trend (Line Chart) - Last 6 months, billed vs collected
 - Bills by Status (Pie Chart) - Distribution with percentages
 - Average Bill Amount by Utility Type (Bar Chart)
 
 ✅ **Recent Bills Table**:
+
 - Shows last 10 bills
 - Clickable rows navigate to bill details
 - Includes Bill ID, Customer, Amount, Status, Due Date
 
 ✅ **Overdue Alerts Section**:
+
 - Top 5 overdue bills
 - Days overdue calculation
 - "Send Reminder" action button
@@ -59,12 +63,15 @@ The BillingDashboard component has been integrated into the main dashboard page 
 The component fetches data from these endpoints:
 
 1. **GET** `/api/v1/bills/summary`
+
    - Returns: billing summary, revenue trend, bills by status, average by utility
 
 2. **GET** `/api/v1/bills?limit=10&sortBy=billDate&order=DESC`
+
    - Returns: recent bills list
 
 3. **GET** `/api/v1/bills/overdue?limit=5`
+
    - Returns: overdue bills list
 
 4. **POST** `/api/v1/bills/:billId/send-reminder`
@@ -73,6 +80,7 @@ The component fetches data from these endpoints:
 ## Data Structure
 
 ### BillingSummary
+
 ```typescript
 interface BillingSummary {
   totalRevenue: number;
@@ -88,6 +96,7 @@ interface BillingSummary {
 ```
 
 ### RevenueTrend
+
 ```typescript
 interface RevenueTrend {
   month: string; // "Jan", "Feb", etc.
@@ -97,6 +106,7 @@ interface RevenueTrend {
 ```
 
 ### BillsByStatus
+
 ```typescript
 interface BillsByStatus {
   status: string; // "PAID", "UNPAID", "OVERDUE", "VOIDED"
@@ -107,6 +117,7 @@ interface BillsByStatus {
 ```
 
 ### AverageByUtility
+
 ```typescript
 interface AverageByUtility {
   utilityType: string; // "Water", "Electricity", "Gas"
@@ -118,6 +129,7 @@ interface AverageByUtility {
 ## Responsive Design
 
 The dashboard is fully responsive:
+
 - **Mobile**: Single column layout
 - **Tablet**: 2-column grid for cards and charts
 - **Desktop**: 4-column grid for stat cards, 2-column for charts
@@ -125,13 +137,16 @@ The dashboard is fully responsive:
 ## Interactive Features
 
 1. **Click Statistics Cards**: Navigate to filtered bills list
+
    - Outstanding Bills → `/bills?status=UNPAID`
    - Overdue Amount → `/bills?status=OVERDUE`
 
 2. **Click Recent Bills**: Navigate to bill detail page
+
    - Row click → `/bills/:billId`
 
 3. **Send Reminder**: Click button to send payment reminder
+
    - Shows success/error alert
 
 4. **View All Links**: Navigate to full lists
@@ -143,13 +158,15 @@ The dashboard is fully responsive:
 ### Change Colors
 
 Edit the PIE_COLORS array in `BillingDashboard.tsx`:
+
 ```typescript
-const PIE_COLORS = ['#22c55e', '#fbbf24', '#ef4444', '#6b7280'];
+const PIE_COLORS = ["#22c55e", "#fbbf24", "#ef4444", "#6b7280"];
 ```
 
 ### Modify Chart Heights
 
 Change ResponsiveContainer height prop:
+
 ```typescript
 <ResponsiveContainer width="100%" height={300}>
 ```
@@ -157,6 +174,7 @@ Change ResponsiveContainer height prop:
 ### Adjust Data Refresh
 
 Add polling or real-time updates:
+
 ```typescript
 useEffect(() => {
   fetchDashboardData();
@@ -170,13 +188,14 @@ useEffect(() => {
 ### Charts not rendering
 
 1. Ensure recharts is installed:
+
    ```bash
    npm list recharts
    ```
 
 2. Check that data is in correct format with console logs:
    ```typescript
-   console.log('Revenue Trend:', revenueTrend);
+   console.log("Revenue Trend:", revenueTrend);
    ```
 
 ### API errors
@@ -201,6 +220,7 @@ useEffect(() => {
 ## Future Enhancements
 
 Consider adding:
+
 - Real-time data updates with WebSockets
 - Export dashboard data to PDF/Excel
 - Date range filters for charts

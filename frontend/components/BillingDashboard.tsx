@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   CurrencyDollarIcon,
   ClockIcon,
@@ -10,7 +10,7 @@ import {
   ArrowTrendingDownIcon,
   BellAlertIcon,
   CheckCircleIcon,
-} from '@heroicons/react/24/outline';
+} from "@heroicons/react/24/outline";
 import {
   LineChart,
   Line,
@@ -25,9 +25,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 interface BillingSummary {
   totalRevenue: number;
@@ -85,7 +85,9 @@ const BillingDashboard = () => {
   const [summary, setSummary] = useState<BillingSummary | null>(null);
   const [revenueTrend, setRevenueTrend] = useState<RevenueTrend[]>([]);
   const [billsByStatus, setBillsByStatus] = useState<BillsByStatus[]>([]);
-  const [averageByUtility, setAverageByUtility] = useState<AverageByUtility[]>([]);
+  const [averageByUtility, setAverageByUtility] = useState<AverageByUtility[]>(
+    []
+  );
   const [recentBills, setRecentBills] = useState<RecentBill[]>([]);
   const [overdueBills, setOverdueBills] = useState<OverdueBill[]>([]);
 
@@ -100,7 +102,9 @@ const BillingDashboard = () => {
       // Fetch all data in parallel
       const [summaryRes, recentRes, overdueRes] = await Promise.all([
         fetch(`${API_BASE_URL}/api/v1/bills/summary`),
-        fetch(`${API_BASE_URL}/api/v1/bills?limit=10&sortBy=billDate&order=DESC`),
+        fetch(
+          `${API_BASE_URL}/api/v1/bills?limit=10&sortBy=billDate&order=DESC`
+        ),
         fetch(`${API_BASE_URL}/api/v1/bills/overdue?limit=5`),
       ]);
 
@@ -122,7 +126,7 @@ const BillingDashboard = () => {
         setOverdueBills(overdueData.data || []);
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error("Error fetching dashboard data:", error);
     } finally {
       setLoading(false);
     }
@@ -130,53 +134,60 @@ const BillingDashboard = () => {
 
   const handleSendReminder = async (billId: number) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/bills/${billId}/send-reminder`, {
-        method: 'POST',
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/bills/${billId}/send-reminder`,
+        {
+          method: "POST",
+        }
+      );
 
       if (response.ok) {
-        alert('Reminder sent successfully!');
+        alert("Reminder sent successfully!");
       }
     } catch (error) {
-      console.error('Error sending reminder:', error);
-      alert('Failed to send reminder');
+      console.error("Error sending reminder:", error);
+      alert("Failed to send reminder");
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'LKR',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "LKR",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      PAID: 'bg-green-100 text-green-800',
-      UNPAID: 'bg-yellow-100 text-yellow-800',
-      OVERDUE: 'bg-red-100 text-red-800',
-      PARTIAL: 'bg-blue-100 text-blue-800',
-      VOIDED: 'bg-gray-100 text-gray-800',
+      PAID: "bg-green-100 text-green-800",
+      UNPAID: "bg-yellow-100 text-yellow-800",
+      OVERDUE: "bg-red-100 text-red-800",
+      PARTIAL: "bg-blue-100 text-blue-800",
+      VOIDED: "bg-gray-100 text-gray-800",
     };
 
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status as keyof typeof styles] || 'bg-gray-100 text-gray-800'}`}>
+      <span
+        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          styles[status as keyof typeof styles] || "bg-gray-100 text-gray-800"
+        }`}
+      >
         {status}
       </span>
     );
   };
 
-  const PIE_COLORS = ['#22c55e', '#fbbf24', '#ef4444', '#6b7280'];
+  const PIE_COLORS = ["#22c55e", "#fbbf24", "#ef4444", "#6b7280"];
 
   if (loading) {
     return (
@@ -204,10 +215,18 @@ const BillingDashboard = () => {
                 ) : (
                   <ArrowTrendingDownIcon className="w-4 h-4 text-red-600 mr-1" />
                 )}
-                <span className={`text-sm font-medium ${summary && summary.revenueTrend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <span
+                  className={`text-sm font-medium ${
+                    summary && summary.revenueTrend >= 0
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
                   {summary?.revenueTrend.toFixed(1)}%
                 </span>
-                <span className="text-sm text-gray-500 ml-1">from last month</span>
+                <span className="text-sm text-gray-500 ml-1">
+                  from last month
+                </span>
               </div>
             </div>
             <div className="p-3 bg-blue-50 rounded-full">
@@ -219,7 +238,7 @@ const BillingDashboard = () => {
         {/* Outstanding Bills Card */}
         <div
           className="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => router.push('/dashboard/bills?status=UNPAID')}
+          onClick={() => router.push("/dashboard/bills?status=UNPAID")}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -240,7 +259,7 @@ const BillingDashboard = () => {
         {/* Overdue Amount Card */}
         <div
           className="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => router.push('/dashboard/bills?status=OVERDUE')}
+          onClick={() => router.push("/dashboard/bills?status=OVERDUE")}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -273,15 +292,36 @@ const BillingDashboard = () => {
           </div>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Target: {summary?.collectionTarget}%</span>
-              <span className={summary && summary.collectionRate >= summary.collectionTarget ? 'text-green-600' : 'text-red-600'}>
-                {summary && summary.collectionRate >= summary.collectionTarget ? 'On Track' : 'Below Target'}
+              <span className="text-gray-600">
+                Target: {summary?.collectionTarget}%
+              </span>
+              <span
+                className={
+                  summary && summary.collectionRate >= summary.collectionTarget
+                    ? "text-green-600"
+                    : "text-red-600"
+                }
+              >
+                {summary && summary.collectionRate >= summary.collectionTarget
+                  ? "On Track"
+                  : "Below Target"}
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className={`h-2 rounded-full ${summary && summary.collectionRate >= summary.collectionTarget ? 'bg-green-600' : 'bg-yellow-600'}`}
-                style={{ width: `${Math.min((summary?.collectionRate || 0) / (summary?.collectionTarget || 100) * 100, 100)}%` }}
+                className={`h-2 rounded-full ${
+                  summary && summary.collectionRate >= summary.collectionTarget
+                    ? "bg-green-600"
+                    : "bg-yellow-600"
+                }`}
+                style={{
+                  width: `${Math.min(
+                    ((summary?.collectionRate || 0) /
+                      (summary?.collectionTarget || 100)) *
+                      100,
+                    100
+                  )}%`,
+                }}
               ></div>
             </div>
           </div>
@@ -292,15 +332,22 @@ const BillingDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue Trend Chart */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Trend (Last 6 Months)</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Revenue Trend (Last 6 Months)
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={revenueTrend}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip
-                formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
-                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}
+                formatter={(value: number | undefined) =>
+                  value !== undefined ? formatCurrency(value) : ""
+                }
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e7eb",
+                }}
               />
               <Legend />
               <Line
@@ -309,7 +356,7 @@ const BillingDashboard = () => {
                 stroke="#2563eb"
                 strokeWidth={2}
                 name="Billed"
-                dot={{ fill: '#2563eb', r: 4 }}
+                dot={{ fill: "#2563eb", r: 4 }}
               />
               <Line
                 type="monotone"
@@ -317,7 +364,7 @@ const BillingDashboard = () => {
                 stroke="#22c55e"
                 strokeWidth={2}
                 name="Collected"
-                dot={{ fill: '#22c55e', r: 4 }}
+                dot={{ fill: "#22c55e", r: 4 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -325,7 +372,9 @@ const BillingDashboard = () => {
 
         {/* Bills by Status Pie Chart */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Bills by Status</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Bills by Status
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -333,21 +382,35 @@ const BillingDashboard = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(entry: any) => `${entry.status}: ${entry.percentage.toFixed(1)}%`}
+                label={(entry: any) =>
+                  `${entry.status}: ${entry.percentage.toFixed(1)}%`
+                }
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="count"
               >
                 {billsByStatus.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={PIE_COLORS[index % PIE_COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number | undefined, name: any, props: any) => [
-                  value !== undefined ? `${value} bills (${formatCurrency(props.payload.amount)})` : '',
-                  props.payload.status
+                formatter={(
+                  value: number | undefined,
+                  name: any,
+                  props: any
+                ) => [
+                  value !== undefined
+                    ? `${value} bills (${formatCurrency(props.payload.amount)})`
+                    : "",
+                  props.payload.status,
                 ]}
-                contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e7eb",
+                }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -356,7 +419,9 @@ const BillingDashboard = () => {
 
       {/* Average Bill Amount by Utility Type Bar Chart */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Average Bill Amount by Utility Type</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Average Bill Amount by Utility Type
+        </h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={averageByUtility}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -364,10 +429,17 @@ const BillingDashboard = () => {
             <YAxis />
             <Tooltip
               formatter={(value: number | undefined, name: any, props: any) => [
-                value !== undefined ? `${formatCurrency(value)} (${props.payload.billCount} bills)` : '',
-                'Average Amount'
+                value !== undefined
+                  ? `${formatCurrency(value)} (${
+                      props.payload.billCount
+                    } bills)`
+                  : "",
+                "Average Amount",
               ]}
-              contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}
+              contentStyle={{
+                backgroundColor: "white",
+                border: "1px solid #e5e7eb",
+              }}
             />
             <Bar dataKey="averageAmount" fill="#3b82f6" radius={[8, 8, 0, 0]} />
           </BarChart>
@@ -380,9 +452,11 @@ const BillingDashboard = () => {
         <div className="bg-white rounded-lg shadow">
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Recent Bills</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Recent Bills
+              </h3>
               <button
-                onClick={() => router.push('/dashboard/bills')}
+                onClick={() => router.push("/dashboard/bills")}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
               >
                 View All →
@@ -393,11 +467,21 @@ const BillingDashboard = () => {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bill ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Bill ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Customer
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Due Date
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -405,17 +489,25 @@ const BillingDashboard = () => {
                   <tr
                     key={bill.billId}
                     className="hover:bg-gray-50 cursor-pointer"
-                    onClick={() => router.push(`/dashboard/bills/${bill.billId}`)}
+                    onClick={() =>
+                      router.push(`/dashboard/bills/${bill.billId}`)
+                    }
                   >
                     <td className="px-6 py-4 text-sm font-medium text-blue-600">
                       #{bill.billNumber}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{bill.customerName}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {bill.customerName}
+                    </td>
                     <td className="px-6 py-4 text-sm text-gray-900 text-right font-medium">
                       {formatCurrency(bill.totalAmount)}
                     </td>
-                    <td className="px-6 py-4 text-sm">{getStatusBadge(bill.status)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{formatDate(bill.dueDate)}</td>
+                    <td className="px-6 py-4 text-sm">
+                      {getStatusBadge(bill.status)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {formatDate(bill.dueDate)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -429,10 +521,12 @@ const BillingDashboard = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <BellAlertIcon className="w-5 h-5 text-red-600 mr-2" />
-                <h3 className="text-lg font-semibold text-gray-900">Overdue Alerts</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Overdue Alerts
+                </h3>
               </div>
               <button
-                onClick={() => router.push('/dashboard/bills?status=OVERDUE')}
+                onClick={() => router.push("/dashboard/bills?status=OVERDUE")}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
               >
                 View All →
@@ -445,12 +539,20 @@ const BillingDashboard = () => {
                 <div key={bill.billId} className="p-6 hover:bg-gray-50">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <p className="font-medium text-gray-900">{bill.customerName}</p>
-                      <p className="text-sm text-gray-600">Bill #{bill.billNumber}</p>
+                      <p className="font-medium text-gray-900">
+                        {bill.customerName}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Bill #{bill.billNumber}
+                      </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-red-600">{formatCurrency(bill.totalAmount)}</p>
-                      <p className="text-sm text-red-600">{bill.daysOverdue} days overdue</p>
+                      <p className="font-medium text-red-600">
+                        {formatCurrency(bill.totalAmount)}
+                      </p>
+                      <p className="text-sm text-red-600">
+                        {bill.daysOverdue} days overdue
+                      </p>
                     </div>
                   </div>
                   <button

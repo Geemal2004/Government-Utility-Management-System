@@ -86,21 +86,21 @@ export default function ConnectionDetailPage() {
       setShowStatusDropdown(false);
       const response = await connectionsApi.updateStatus(
         connectionId,
-        newStatus,
+        newStatus
       );
 
       if (response.success) {
         addToast(
           "success",
           "Status Updated",
-          `Connection status changed to ${newStatus}`,
+          `Connection status changed to ${newStatus}`
         );
         fetchConnection();
       } else {
         addToast(
           "error",
           "Update Failed",
-          response.error || "Failed to update status",
+          response.error || "Failed to update status"
         );
       }
     } catch (err: unknown) {
@@ -117,7 +117,7 @@ export default function ConnectionDetailPage() {
 
     if (
       !confirm(
-        "Are you sure you want to disconnect this service connection? This action will mark the connection as DISCONNECTED.",
+        "Are you sure you want to disconnect this service connection? This action will mark the connection as DISCONNECTED."
       )
     ) {
       return;
@@ -131,14 +131,14 @@ export default function ConnectionDetailPage() {
         addToast(
           "success",
           "Connection Disconnected",
-          "Service connection has been disconnected successfully",
+          "Service connection has been disconnected successfully"
         );
         router.push("/dashboard/connections");
       } else {
         addToast(
           "error",
           "Disconnect Failed",
-          response.error || "Failed to disconnect",
+          response.error || "Failed to disconnect"
         );
       }
     } catch (err: unknown) {
@@ -286,7 +286,9 @@ export default function ConnectionDetailPage() {
           </Link>
           <div className="flex items-center gap-3">
             <div
-              className={`p-3 rounded-lg border ${getUtilityBadgeColor(connection.utilityType?.name)}`}
+              className={`p-3 rounded-lg border ${getUtilityBadgeColor(
+                connection.utilityType?.name
+              )}`}
             >
               {getUtilityIcon(connection.utilityType?.name)}
             </div>
@@ -343,12 +345,12 @@ export default function ConnectionDetailPage() {
                           status === ConnectionStatus.ACTIVE
                             ? "bg-green-500"
                             : status === ConnectionStatus.INACTIVE
-                              ? "bg-gray-500"
-                              : status === ConnectionStatus.SUSPENDED
-                                ? "bg-yellow-500"
-                                : status === ConnectionStatus.DISCONNECTED
-                                  ? "bg-red-500"
-                                  : "bg-blue-500"
+                            ? "bg-gray-500"
+                            : status === ConnectionStatus.SUSPENDED
+                            ? "bg-yellow-500"
+                            : status === ConnectionStatus.DISCONNECTED
+                            ? "bg-red-500"
+                            : "bg-blue-500"
                         }`}
                       />
                       {status}
@@ -383,12 +385,12 @@ export default function ConnectionDetailPage() {
           connection.connectionStatus === ConnectionStatus.ACTIVE
             ? "bg-green-50 border-green-200"
             : connection.connectionStatus === ConnectionStatus.PENDING
-              ? "bg-blue-50 border-blue-200"
-              : connection.connectionStatus === ConnectionStatus.SUSPENDED
-                ? "bg-yellow-50 border-yellow-200"
-                : connection.connectionStatus === ConnectionStatus.DISCONNECTED
-                  ? "bg-red-50 border-red-200"
-                  : "bg-gray-50 border-gray-200"
+            ? "bg-blue-50 border-blue-200"
+            : connection.connectionStatus === ConnectionStatus.SUSPENDED
+            ? "bg-yellow-50 border-yellow-200"
+            : connection.connectionStatus === ConnectionStatus.DISCONNECTED
+            ? "bg-red-50 border-red-200"
+            : "bg-gray-50 border-gray-200"
         }`}
       >
         <div className="flex items-center justify-between">
@@ -435,7 +437,9 @@ export default function ConnectionDetailPage() {
               <div>
                 <label className="text-sm text-gray-500">Utility Type</label>
                 <div
-                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border mt-1 ${getUtilityBadgeColor(connection.utilityType?.name)}`}
+                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border mt-1 ${getUtilityBadgeColor(
+                    connection.utilityType?.name
+                  )}`}
                 >
                   {getUtilityIcon(connection.utilityType?.name)}
                   <span className="font-medium">
@@ -559,8 +563,8 @@ export default function ConnectionDetailPage() {
                         connection.meter.status === "ACTIVE"
                           ? "bg-green-100 text-green-800"
                           : connection.meter.status === "FAULTY"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-gray-100 text-gray-800"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {connection.meter.status}

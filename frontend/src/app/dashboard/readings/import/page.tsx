@@ -96,7 +96,7 @@ export default function ImportReadingsPage() {
         }
       }
     },
-    [addToast],
+    [addToast]
   );
 
   /**
@@ -129,7 +129,7 @@ export default function ImportReadingsPage() {
         addToast(
           "error",
           "Invalid File",
-          "CSV file is empty or has no data rows",
+          "CSV file is empty or has no data rows"
         );
         setFile(null);
         return;
@@ -145,13 +145,13 @@ export default function ImportReadingsPage() {
       ];
 
       const missingHeaders = requiredHeaders.filter(
-        (h) => !headers.includes(h),
+        (h) => !headers.includes(h)
       );
       if (missingHeaders.length > 0) {
         addToast(
           "error",
           "Invalid Format",
-          `Missing required columns: ${missingHeaders.join(", ")}`,
+          `Missing required columns: ${missingHeaders.join(", ")}`
         );
         setFile(null);
         return;
@@ -203,7 +203,7 @@ export default function ImportReadingsPage() {
           !validSources.includes(row.readingSource.toUpperCase())
         ) {
           row.errors.push(
-            `Invalid Reading Source. Must be one of: ${validSources.join(", ")}`,
+            `Invalid Reading Source. Must be one of: ${validSources.join(", ")}`
           );
         }
 
@@ -264,7 +264,7 @@ MTR-003,2024-01-15 11:30:00,9012.34,,ESTIMATED`;
       addToast(
         "error",
         "Validation Failed",
-        "Please fix all errors before importing",
+        "Please fix all errors before importing"
       );
       return;
     }
@@ -297,7 +297,7 @@ MTR-003,2024-01-15 11:30:00,9012.34,,ESTIMATED`;
           addToast(
             "success",
             "Import Complete",
-            `Successfully imported ${result.successCount} readings`,
+            `Successfully imported ${result.successCount} readings`
           );
           setTimeout(() => {
             router.push("/dashboard/readings");
@@ -306,14 +306,14 @@ MTR-003,2024-01-15 11:30:00,9012.34,,ESTIMATED`;
           addToast(
             "warning",
             "Import Complete with Errors",
-            `Imported ${result.successCount} readings. ${result.errorCount} failed.`,
+            `Imported ${result.successCount} readings. ${result.errorCount} failed.`
           );
         }
       } else {
         addToast(
           "error",
           "Import Failed",
-          response.error || "Failed to import readings",
+          response.error || "Failed to import readings"
         );
       }
     } catch (err) {
@@ -321,7 +321,7 @@ MTR-003,2024-01-15 11:30:00,9012.34,,ESTIMATED`;
       addToast(
         "error",
         "Error",
-        "Failed to import readings. Please try again.",
+        "Failed to import readings. Please try again."
       );
     } finally {
       setIsImporting(false);
@@ -341,7 +341,9 @@ MTR-003,2024-01-15 11:30:00,9012.34,,ESTIMATED`;
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `import-errors-${new Date().toISOString().split("T")[0]}.txt`;
+    link.download = `import-errors-${
+      new Date().toISOString().split("T")[0]
+    }.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -562,8 +564,8 @@ MTR-003,2024-01-15 11:30:00,9012.34,,ESTIMATED`;
                       row.status === "error"
                         ? "bg-red-50"
                         : row.status === "warning"
-                          ? "bg-yellow-50"
-                          : ""
+                        ? "bg-yellow-50"
+                        : ""
                     }
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

@@ -177,7 +177,7 @@ export default function ReadingsPage() {
   const handleDelete = async (readingId: number) => {
     if (
       !confirm(
-        "Are you sure you want to delete this reading? This action cannot be undone.",
+        "Are you sure you want to delete this reading? This action cannot be undone."
       )
     ) {
       return;
@@ -194,7 +194,7 @@ export default function ReadingsPage() {
         addToast(
           "error",
           "Error",
-          response.error || "Failed to delete reading",
+          response.error || "Failed to delete reading"
         );
       }
     } catch (err) {
@@ -222,7 +222,9 @@ export default function ReadingsPage() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `meter-readings-${new Date().toISOString().split("T")[0]}.csv`;
+      link.download = `meter-readings-${
+        new Date().toISOString().split("T")[0]
+      }.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -234,7 +236,7 @@ export default function ReadingsPage() {
       addToast(
         "error",
         "Error",
-        "Failed to export readings. Please try again.",
+        "Failed to export readings. Please try again."
       );
     } finally {
       setExporting(false);
@@ -257,14 +259,14 @@ export default function ReadingsPage() {
         addToast(
           successCount > 0 ? "success" : "error",
           "Import Complete",
-          `Imported ${successCount} of ${totalRows} readings. ${errorCount} errors.`,
+          `Imported ${successCount} of ${totalRows} readings. ${errorCount} errors.`
         );
         fetchReadings();
       } else {
         addToast(
           "error",
           "Error",
-          response.error || "Failed to import readings",
+          response.error || "Failed to import readings"
         );
       }
     } catch (err) {
@@ -272,7 +274,7 @@ export default function ReadingsPage() {
       addToast(
         "error",
         "Error",
-        "Failed to import readings. Please check the file format.",
+        "Failed to import readings. Please check the file format."
       );
     } finally {
       setImporting(false);
@@ -304,7 +306,7 @@ export default function ReadingsPage() {
    */
   const getConsumptionStyle = (
     consumption: number | null,
-    averageConsumption: number,
+    averageConsumption: number
   ) => {
     if (consumption === null) return "";
     if (consumption < 0) return "bg-red-100 text-red-800 font-semibold";
@@ -685,7 +687,7 @@ export default function ReadingsPage() {
                     <td
                       className={`px-6 py-4 whitespace-nowrap text-sm text-right font-mono ${getConsumptionStyle(
                         reading.consumption,
-                        stats.averageConsumption,
+                        stats.averageConsumption
                       )}`}
                     >
                       {reading.consumption !== null ? (
@@ -705,7 +707,7 @@ export default function ReadingsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getSourceBadgeColor(
-                          reading.readingSource,
+                          reading.readingSource
                         )}`}
                       >
                         {reading.readingSource}

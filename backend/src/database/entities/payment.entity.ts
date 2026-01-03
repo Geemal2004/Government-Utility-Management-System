@@ -5,8 +5,6 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
-  BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
 import {
   IsNotEmpty,
@@ -50,7 +48,6 @@ export enum PaymentMethod {
   ONLINE = 'ONLINE',                     // Generic online (deprecated, use STRIPE_CARD/STRIPE_WALLET)
   MOBILE_MONEY = 'MOBILE_MONEY',         // Mobile money payments
 }
-
 /**
  * Payment methods that require a transaction reference
  */

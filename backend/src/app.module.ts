@@ -10,6 +10,9 @@ import { LookupModule } from './lookup/lookup.module';
 import { DatabaseModule } from './database/database.module';
 import { ReadingsModule } from './readings/readings.module';
 import { BillingModule } from './billing/billing.module';
+import { StripeModule } from './stripe/stripe.module';
+import { PaymentsModule } from './payments/payments.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -66,6 +69,11 @@ import { BillingModule } from './billing/billing.module';
     LookupModule,
     ReadingsModule,
     BillingModule,
+
+    // Payment & Stripe modules
+    StripeModule,      // Global Stripe client
+    PaymentsModule,    // Payment processing
+    WebhooksModule,    // Stripe webhooks
   ],
 })
 export class AppModule {}

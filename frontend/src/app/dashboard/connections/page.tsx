@@ -76,8 +76,8 @@ export default function ConnectionsPage() {
           new Set(
             response.data.items
               .map((c) => c.connectionAddress?.city)
-              .filter((c): c is string => !!c),
-          ),
+              .filter((c): c is string => !!c)
+          )
         ).sort();
         setCities((prev) => {
           const combined = Array.from(new Set([...prev, ...uniqueCities]));
@@ -107,27 +107,27 @@ export default function ConnectionsPage() {
 
   const handleStatusChange = async (
     connectionId: number,
-    newStatus: ConnectionStatus,
+    newStatus: ConnectionStatus
   ) => {
     try {
       setUpdatingStatus(connectionId);
       const response = await connectionsApi.updateStatus(
         connectionId,
-        newStatus,
+        newStatus
       );
 
       if (response.success) {
         addToast(
           "success",
           "Status Updated",
-          `Connection status changed to ${newStatus}`,
+          `Connection status changed to ${newStatus}`
         );
         fetchConnections();
       } else {
         addToast(
           "error",
           "Update Failed",
-          response.error || "Failed to update status",
+          response.error || "Failed to update status"
         );
       }
     } catch (err: unknown) {
@@ -378,7 +378,9 @@ export default function ConnectionsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${getUtilityBadgeColor(connection.utilityType?.name)}`}
+                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${getUtilityBadgeColor(
+                          connection.utilityType?.name
+                        )}`}
                       >
                         {getUtilityIcon(connection.utilityType?.name)}
                         <span className="text-sm font-medium">
@@ -414,7 +416,9 @@ export default function ConnectionsPage() {
                         ) : (
                           <div className="group relative">
                             <button
-                              className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(connection.connectionStatus)}`}
+                              className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(
+                                connection.connectionStatus
+                              )}`}
                             >
                               {connection.connectionStatus}
                               <ChevronDown className="h-3 w-3" />
@@ -428,7 +432,7 @@ export default function ConnectionsPage() {
                                       onClick={() =>
                                         handleStatusChange(
                                           connection.connectionId,
-                                          statusOption,
+                                          statusOption
                                         )
                                       }
                                       disabled={
@@ -448,20 +452,20 @@ export default function ConnectionsPage() {
                                           ConnectionStatus.ACTIVE
                                             ? "bg-green-500"
                                             : statusOption ===
-                                                ConnectionStatus.INACTIVE
-                                              ? "bg-gray-500"
-                                              : statusOption ===
-                                                  ConnectionStatus.SUSPENDED
-                                                ? "bg-yellow-500"
-                                                : statusOption ===
-                                                    ConnectionStatus.DISCONNECTED
-                                                  ? "bg-red-500"
-                                                  : "bg-blue-500"
+                                              ConnectionStatus.INACTIVE
+                                            ? "bg-gray-500"
+                                            : statusOption ===
+                                              ConnectionStatus.SUSPENDED
+                                            ? "bg-yellow-500"
+                                            : statusOption ===
+                                              ConnectionStatus.DISCONNECTED
+                                            ? "bg-red-500"
+                                            : "bg-blue-500"
                                         }`}
                                       />
                                       {statusOption}
                                     </button>
-                                  ),
+                                  )
                                 )}
                               </div>
                             </div>

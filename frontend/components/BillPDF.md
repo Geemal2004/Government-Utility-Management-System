@@ -13,9 +13,11 @@ yarn add @react-pdf/renderer
 ## Components
 
 ### 1. BillPDF.tsx
+
 Core PDF document component that generates the bill layout with all sections.
 
 ### 2. BillPDFDownload.tsx
+
 Wrapper component that provides download, preview, and print functionality.
 
 ## Usage
@@ -23,7 +25,7 @@ Wrapper component that provides download, preview, and print functionality.
 ### Basic Usage (Download Button)
 
 ```tsx
-import BillPDFDownload from '@/components/BillPDFDownload';
+import BillPDFDownload from "@/components/BillPDFDownload";
 
 function BillDetailPage() {
   const bill = {
@@ -148,15 +150,13 @@ interface BillData {
 In `BillPDF.tsx`, add an Image component in the header:
 
 ```tsx
-import { Image } from '@react-pdf/renderer';
+import { Image } from "@react-pdf/renderer";
 
 // In the header section:
 <View style={styles.headerTop}>
   <Image src="/logo.png" style={{ width: 60, height: 60 }} />
-  <View style={styles.companyInfo}>
-    {/* ... rest of header */}
-  </View>
-</View>
+  <View style={styles.companyInfo}>{/* ... rest of header */}</View>
+</View>;
 ```
 
 ### Add QR Code
@@ -170,13 +170,15 @@ npm install qrcode
 Generate QR code as data URL and add to PDF:
 
 ```tsx
-import QRCode from 'qrcode';
+import QRCode from "qrcode";
 
 // Generate QR code
-const qrCodeDataUrl = await QRCode.toDataURL(`https://govutility.lk/pay/${bill.billNumber}`);
+const qrCodeDataUrl = await QRCode.toDataURL(
+  `https://govutility.lk/pay/${bill.billNumber}`
+);
 
 // In PDF:
-<Image src={qrCodeDataUrl} style={{ width: 80, height: 80 }} />
+<Image src={qrCodeDataUrl} style={{ width: 80, height: 80 }} />;
 ```
 
 ### Change Colors
@@ -187,7 +189,7 @@ Modify the color scheme in `styles` object:
 const styles = StyleSheet.create({
   // Change primary color from blue to green:
   billTitle: {
-    color: '#22c55e', // was '#2563eb'
+    color: "#22c55e", // was '#2563eb'
   },
   // ... other styles
 });
@@ -213,6 +215,7 @@ Example: `Bill_BILL-2025-001_Perera.pdf`
 ### "Module not found" error
 
 Make sure to install @react-pdf/renderer:
+
 ```bash
 npm install @react-pdf/renderer
 ```

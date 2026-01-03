@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import {
   DocumentPlusIcon,
   XMarkIcon,
@@ -13,9 +13,9 @@ import {
   PlayIcon,
   StopIcon,
   ArrowPathIcon,
-} from '@heroicons/react/24/outline';
+} from "@heroicons/react/24/outline";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 interface BulkGenerationFormData {
   billingPeriodStart: string;
@@ -74,11 +74,11 @@ interface GenerationResults {
   failedBills: FailureResult[];
 }
 
-type PageState = 'form' | 'preview' | 'generating' | 'results';
+type PageState = "form" | "preview" | "generating" | "results";
 
 export default function BulkGenerateBillsPage() {
   const router = useRouter();
-  const [pageState, setPageState] = useState<PageState>('form');
+  const [pageState, setPageState] = useState<PageState>("form");
   const [meterPreviews, setMeterPreviews] = useState<MeterPreview[]>([]);
   const [totalMeters, setTotalMeters] = useState(0);
   const [totalEstimatedAmount, setTotalEstimatedAmount] = useState(0);
@@ -102,8 +102,8 @@ export default function BulkGenerateBillsPage() {
       applySubsidies: true,
       applySolarCredits: true,
       skipExisting: true,
-      utilityType: 'ALL',
-      customerType: 'ALL',
+      utilityType: "ALL",
+      customerType: "ALL",
       specificMeters: [],
     },
   });
@@ -116,7 +116,7 @@ export default function BulkGenerateBillsPage() {
       const endDate = new Date(watchedFields.billingPeriodEnd);
       const dueDate = new Date(endDate);
       dueDate.setDate(dueDate.getDate() + 30);
-      setValue('dueDate', dueDate.toISOString().split('T')[0]);
+      setValue("dueDate", dueDate.toISOString().split("T")[0]);
     }
   }, [watchedFields.billingPeriodEnd, setValue]);
 
@@ -124,21 +124,31 @@ export default function BulkGenerateBillsPage() {
     const now = new Date();
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    
-    setValue('billingPeriodStart', firstDay.toISOString().split('T')[0]);
-    setValue('billingPeriodEnd', lastDay.toISOString().split('T')[0]);
+
+    setValue("billingPeriodStart", firstDay.toISOString().split("T")[0]);
+    setValue("billingPeriodEnd", lastDay.toISOString().split("T")[0]);
   };
 
   const getPeriodSummary = () => {
     if (!watchedFields.billingPeriodStart || !watchedFields.billingPeriodEnd) {
-      return '';
+      return "";
     }
-    
+
     const start = new Date(watchedFields.billingPeriodStart);
     const end = new Date(watchedFields.billingPeriodEnd);
-    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    
-    return `${start.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} (${days} days)`;
+    const days = Math.ceil(
+      (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    return `${start.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })} - ${end.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })} (${days} days)`;
   };
 
   const handlePreview = async (data: BulkGenerationFormData) => {
@@ -147,8 +157,8 @@ export default function BulkGenerateBillsPage() {
       setError(null);
 
       const response = await fetch(`${API_BASE_URL}/api/v1/bills/bulk`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
           dryRun: true,
@@ -157,18 +167,18 @@ export default function BulkGenerateBillsPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to preview meters');
+        throw new Error(errorData.message || "Failed to preview meters");
       }
 
       const result = await response.json();
-      
+
       setMeterPreviews(result.data.meters.slice(0, 50));
       setTotalMeters(result.data.totalCount);
       setTotalEstimatedAmount(result.data.totalEstimatedAmount);
-      setPageState('preview');
+      setPageState("preview");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to preview meters');
-      console.error('Error previewing meters:', err);
+      setError(err instanceof Error ? err.message : "Failed to preview meters");
+      console.error("Error previewing meters:", err);
     } finally {
       setLoading(false);
     }
@@ -178,7 +188,7 @@ export default function BulkGenerateBillsPage() {
     try {
       setIsGenerating(true);
       setCancelRequested(false);
-      setPageState('generating');
+      setPageState("generating");
       setError(null);
 
       const formData = watchedFields;
@@ -191,14 +201,14 @@ export default function BulkGenerateBillsPage() {
       // Process in batches
       for (let offset = 0; offset < totalToProcess; offset += batchSize) {
         if (cancelRequested) {
-          throw new Error('Generation cancelled by user');
+          throw new Error("Generation cancelled by user");
         }
 
         const startTime = Date.now();
 
         const response = await fetch(`${API_BASE_URL}/api/v1/bills/bulk`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...formData,
             dryRun: false,
@@ -209,17 +219,19 @@ export default function BulkGenerateBillsPage() {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to generate bills');
+          throw new Error(errorData.message || "Failed to generate bills");
         }
 
         const result = await response.json();
-        
+
         successfulBills.push(...result.data.successfulBills);
         failedBills.push(...result.data.failedBills);
         processed += result.data.processedCount;
 
         const elapsedTime = Date.now() - startTime;
-        const remainingBatches = Math.ceil((totalToProcess - processed) / batchSize);
+        const remainingBatches = Math.ceil(
+          (totalToProcess - processed) / batchSize
+        );
         const estimatedTimeRemaining = (elapsedTime / 1000) * remainingBatches;
 
         setProgress({
@@ -227,14 +239,18 @@ export default function BulkGenerateBillsPage() {
           processed,
           successful: successfulBills.length,
           failed: failedBills.length,
-          currentMeter: result.data.currentMeter || '',
+          currentMeter: result.data.currentMeter || "",
           estimatedTimeRemaining,
         });
       }
 
       // Set final results
-      const totalAmount = successfulBills.reduce((sum, bill) => sum + bill.amount, 0);
-      const averageAmount = successfulBills.length > 0 ? totalAmount / successfulBills.length : 0;
+      const totalAmount = successfulBills.reduce(
+        (sum, bill) => sum + bill.amount,
+        0
+      );
+      const averageAmount =
+        successfulBills.length > 0 ? totalAmount / successfulBills.length : 0;
 
       setResults({
         successCount: successfulBills.length,
@@ -245,10 +261,10 @@ export default function BulkGenerateBillsPage() {
         failedBills,
       });
 
-      setPageState('results');
+      setPageState("results");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate bills');
-      console.error('Error generating bills:', err);
+      setError(err instanceof Error ? err.message : "Failed to generate bills");
+      console.error("Error generating bills:", err);
     } finally {
       setIsGenerating(false);
     }
@@ -260,11 +276,11 @@ export default function BulkGenerateBillsPage() {
 
   const handleRetryFailed = async () => {
     if (!results) return;
-    
+
     // Extract failed meter IDs and retry
-    const failedMeterIds = results.failedBills.map(f => f.meterId);
-    setValue('specificMeters', failedMeterIds);
-    setPageState('form');
+    const failedMeterIds = results.failedBills.map((f) => f.meterId);
+    setValue("specificMeters", failedMeterIds);
+    setPageState("form");
   };
 
   const downloadCSV = (data: any[], filename: string) => {
@@ -272,13 +288,15 @@ export default function BulkGenerateBillsPage() {
 
     const headers = Object.keys(data[0]);
     const csvContent = [
-      headers.join(','),
-      ...data.map(row => headers.map(header => JSON.stringify(row[header] || '')).join(','))
-    ].join('\n');
+      headers.join(","),
+      ...data.map((row) =>
+        headers.map((header) => JSON.stringify(row[header] || "")).join(",")
+      ),
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     a.click();
@@ -286,9 +304,9 @@ export default function BulkGenerateBillsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'LKR',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "LKR",
     }).format(amount);
   };
 
@@ -300,7 +318,7 @@ export default function BulkGenerateBillsPage() {
 
   const resetForm = () => {
     reset();
-    setPageState('form');
+    setPageState("form");
     setMeterPreviews([]);
     setTotalMeters(0);
     setTotalEstimatedAmount(0);
@@ -320,8 +338,12 @@ export default function BulkGenerateBillsPage() {
           >
             ← Back to Bills
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">Bulk Bill Generation</h1>
-          <p className="text-gray-600 mt-1">Generate bills for multiple meters for a billing period</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Bulk Bill Generation
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Generate bills for multiple meters for a billing period
+          </p>
         </div>
 
         {/* Error Message */}
@@ -338,12 +360,14 @@ export default function BulkGenerateBillsPage() {
         )}
 
         {/* Configuration Form */}
-        {pageState === 'form' && (
+        {pageState === "form" && (
           <form onSubmit={handleSubmit(handlePreview)}>
             {/* Billing Period Section */}
             <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Billing Period</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Billing Period
+              </h2>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -351,11 +375,15 @@ export default function BulkGenerateBillsPage() {
                   </label>
                   <input
                     type="date"
-                    {...register('billingPeriodStart', { required: 'Start date is required' })}
+                    {...register("billingPeriodStart", {
+                      required: "Start date is required",
+                    })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   {errors.billingPeriodStart && (
-                    <p className="mt-1 text-sm text-red-600">{errors.billingPeriodStart.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.billingPeriodStart.message}
+                    </p>
                   )}
                 </div>
 
@@ -365,11 +393,15 @@ export default function BulkGenerateBillsPage() {
                   </label>
                   <input
                     type="date"
-                    {...register('billingPeriodEnd', { required: 'End date is required' })}
+                    {...register("billingPeriodEnd", {
+                      required: "End date is required",
+                    })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   {errors.billingPeriodEnd && (
-                    <p className="mt-1 text-sm text-red-600">{errors.billingPeriodEnd.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.billingPeriodEnd.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -394,15 +426,17 @@ export default function BulkGenerateBillsPage() {
 
             {/* Filters Section */}
             <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Filters</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Filters
+              </h2>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Utility Type
                   </label>
                   <select
-                    {...register('utilityType')}
+                    {...register("utilityType")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="ALL">All Utilities</option>
@@ -417,7 +451,7 @@ export default function BulkGenerateBillsPage() {
                     Customer Type
                   </label>
                   <select
-                    {...register('customerType')}
+                    {...register("customerType")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="ALL">All Customers</option>
@@ -433,7 +467,7 @@ export default function BulkGenerateBillsPage() {
                     Geographic Area (Optional)
                   </label>
                   <select
-                    {...register('geoAreaId')}
+                    {...register("geoAreaId")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">All Areas</option>
@@ -445,74 +479,99 @@ export default function BulkGenerateBillsPage() {
 
             {/* Due Date Section */}
             <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Due Date</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Due Date
+              </h2>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Due Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
-                  {...register('dueDate', { required: 'Due date is required' })}
+                  {...register("dueDate", { required: "Due date is required" })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {errors.dueDate && (
-                  <p className="mt-1 text-sm text-red-600">{errors.dueDate.message}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.dueDate.message}
+                  </p>
                 )}
-                <p className="mt-1 text-sm text-gray-500">Default: 30 days from billing end date</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  Default: 30 days from billing end date
+                </p>
               </div>
             </div>
 
             {/* Options Section */}
             <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Options</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Options
+              </h2>
+
               <div className="space-y-3">
                 <label className="flex items-start">
                   <input
                     type="checkbox"
-                    {...register('dryRun')}
+                    {...register("dryRun")}
                     className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div className="ml-3">
-                    <span className="text-sm font-medium text-gray-900">Dry Run (Preview without generating)</span>
-                    <p className="text-sm text-gray-600">Calculate bills but don't save to database</p>
+                    <span className="text-sm font-medium text-gray-900">
+                      Dry Run (Preview without generating)
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Calculate bills but don't save to database
+                    </p>
                   </div>
                 </label>
 
                 <label className="flex items-start">
                   <input
                     type="checkbox"
-                    {...register('applySubsidies')}
+                    {...register("applySubsidies")}
                     className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div className="ml-3">
-                    <span className="text-sm font-medium text-gray-900">Apply Subsidies</span>
-                    <p className="text-sm text-gray-600">Apply subsidies for eligible customers</p>
+                    <span className="text-sm font-medium text-gray-900">
+                      Apply Subsidies
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Apply subsidies for eligible customers
+                    </p>
                   </div>
                 </label>
 
                 <label className="flex items-start">
                   <input
                     type="checkbox"
-                    {...register('applySolarCredits')}
+                    {...register("applySolarCredits")}
                     className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div className="ml-3">
-                    <span className="text-sm font-medium text-gray-900">Apply Solar Credits</span>
-                    <p className="text-sm text-gray-600">Apply solar export credits for eligible meters</p>
+                    <span className="text-sm font-medium text-gray-900">
+                      Apply Solar Credits
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Apply solar export credits for eligible meters
+                    </p>
                   </div>
                 </label>
 
                 <label className="flex items-start">
                   <input
                     type="checkbox"
-                    {...register('skipExisting')}
+                    {...register("skipExisting")}
                     className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div className="ml-3">
-                    <span className="text-sm font-medium text-gray-900">Skip meters with existing bills in period</span>
-                    <p className="text-sm text-gray-600">Don't generate bills for meters that already have bills in this period</p>
+                    <span className="text-sm font-medium text-gray-900">
+                      Skip meters with existing bills in period
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Don't generate bills for meters that already have bills in
+                      this period
+                    </p>
                   </div>
                 </label>
               </div>
@@ -552,20 +611,28 @@ export default function BulkGenerateBillsPage() {
         )}
 
         {/* Preview Section */}
-        {pageState === 'preview' && (
+        {pageState === "preview" && (
           <div>
             <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Meters to be Billed</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Meters to be Billed
+              </h2>
+
               {/* Summary */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="text-sm text-blue-600">Total Meters</p>
-                  <p className="text-3xl font-bold text-blue-600">{totalMeters}</p>
+                  <p className="text-3xl font-bold text-blue-600">
+                    {totalMeters}
+                  </p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-green-600">Estimated Total Amount</p>
-                  <p className="text-3xl font-bold text-green-600">{formatCurrency(totalEstimatedAmount)}</p>
+                  <p className="text-sm text-green-600">
+                    Estimated Total Amount
+                  </p>
+                  <p className="text-3xl font-bold text-green-600">
+                    {formatCurrency(totalEstimatedAmount)}
+                  </p>
                 </div>
               </div>
 
@@ -574,18 +641,32 @@ export default function BulkGenerateBillsPage() {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Meter Serial</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Reading</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Est. Consumption</th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Est. Amount</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Meter Serial
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Customer
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Last Reading
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                        Est. Consumption
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                        Est. Amount
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {meterPreviews.map((meter) => (
                       <tr key={meter.meterId}>
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900">{meter.meterSerialNo}</td>
-                        <td className="px-4 py-3 text-sm text-gray-900">{meter.customerName}</td>
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                          {meter.meterSerialNo}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-900">
+                          {meter.customerName}
+                        </td>
                         <td className="px-4 py-3 text-sm text-gray-600">
                           {new Date(meter.lastReadingDate).toLocaleDateString()}
                         </td>
@@ -621,7 +702,7 @@ export default function BulkGenerateBillsPage() {
                 </button>
 
                 <button
-                  onClick={() => setPageState('form')}
+                  onClick={() => setPageState("form")}
                   className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
                 >
                   Back to Form
@@ -631,7 +712,8 @@ export default function BulkGenerateBillsPage() {
               {watchedFields.dryRun && (
                 <p className="mt-3 text-sm text-orange-600">
                   <ExclamationCircleIcon className="w-4 h-4 inline mr-1" />
-                  Dry run is enabled. Uncheck it in the form to generate actual bills.
+                  Dry run is enabled. Uncheck it in the form to generate actual
+                  bills.
                 </p>
               )}
             </div>
@@ -639,20 +721,28 @@ export default function BulkGenerateBillsPage() {
         )}
 
         {/* Generation Progress Section */}
-        {pageState === 'generating' && progress && (
+        {pageState === "generating" && progress && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Bills...</h2>
-            
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Generating Bills...
+            </h2>
+
             {/* Progress Bar */}
             <div className="mb-6">
               <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Progress: {progress.processed} / {progress.total}</span>
-                <span>{Math.round((progress.processed / progress.total) * 100)}%</span>
+                <span>
+                  Progress: {progress.processed} / {progress.total}
+                </span>
+                <span>
+                  {Math.round((progress.processed / progress.total) * 100)}%
+                </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
                   className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${(progress.processed / progress.total) * 100}%` }}
+                  style={{
+                    width: `${(progress.processed / progress.total) * 100}%`,
+                  }}
                 ></div>
               </div>
             </div>
@@ -661,15 +751,21 @@ export default function BulkGenerateBillsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-green-600">Successful</p>
-                <p className="text-2xl font-bold text-green-600">{progress.successful}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {progress.successful}
+                </p>
               </div>
               <div className="bg-red-50 p-4 rounded-lg">
                 <p className="text-sm text-red-600">Failed</p>
-                <p className="text-2xl font-bold text-red-600">{progress.failed}</p>
+                <p className="text-2xl font-bold text-red-600">
+                  {progress.failed}
+                </p>
               </div>
               <div className="bg-blue-50 p-4 rounded-lg">
                 <p className="text-sm text-blue-600">Est. Time Remaining</p>
-                <p className="text-2xl font-bold text-blue-600">{formatTime(progress.estimatedTimeRemaining)}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {formatTime(progress.estimatedTimeRemaining)}
+                </p>
               </div>
             </div>
 
@@ -677,7 +773,9 @@ export default function BulkGenerateBillsPage() {
             {progress.currentMeter && (
               <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg mb-6">
                 <p className="text-sm text-gray-600">Currently processing:</p>
-                <p className="font-medium text-gray-900">{progress.currentMeter}</p>
+                <p className="font-medium text-gray-900">
+                  {progress.currentMeter}
+                </p>
               </div>
             )}
 
@@ -688,21 +786,25 @@ export default function BulkGenerateBillsPage() {
               className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <StopIcon className="w-5 h-5" />
-              {cancelRequested ? 'Cancelling...' : 'Cancel Generation'}
+              {cancelRequested ? "Cancelling..." : "Cancel Generation"}
             </button>
           </div>
         )}
 
         {/* Results Section */}
-        {pageState === 'results' && results && (
+        {pageState === "results" && results && (
           <div>
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Successfully Generated</p>
-                    <p className="text-3xl font-bold text-green-600">{results.successCount}</p>
+                    <p className="text-sm text-gray-600">
+                      Successfully Generated
+                    </p>
+                    <p className="text-3xl font-bold text-green-600">
+                      {results.successCount}
+                    </p>
                   </div>
                   <CheckCircleIcon className="w-12 h-12 text-green-600" />
                 </div>
@@ -712,7 +814,9 @@ export default function BulkGenerateBillsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Failed</p>
-                    <p className="text-3xl font-bold text-red-600">{results.failureCount}</p>
+                    <p className="text-3xl font-bold text-red-600">
+                      {results.failureCount}
+                    </p>
                   </div>
                   <ExclamationCircleIcon className="w-12 h-12 text-red-600" />
                 </div>
@@ -721,14 +825,18 @@ export default function BulkGenerateBillsPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div>
                   <p className="text-sm text-gray-600">Total Amount</p>
-                  <p className="text-2xl font-bold text-blue-600">{formatCurrency(results.totalAmount)}</p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {formatCurrency(results.totalAmount)}
+                  </p>
                 </div>
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
                 <div>
                   <p className="text-sm text-gray-600">Average Bill</p>
-                  <p className="text-2xl font-bold text-gray-900">{formatCurrency(results.averageAmount)}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {formatCurrency(results.averageAmount)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -737,9 +845,16 @@ export default function BulkGenerateBillsPage() {
             {results.successfulBills.length > 0 && (
               <div className="bg-white rounded-lg shadow p-6 mb-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">Successfully Generated Bills</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Successfully Generated Bills
+                  </h2>
                   <button
-                    onClick={() => downloadCSV(results.successfulBills, 'successful-bills.csv')}
+                    onClick={() =>
+                      downloadCSV(
+                        results.successfulBills,
+                        "successful-bills.csv"
+                      )
+                    }
                     className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium"
                   >
                     <ArrowDownTrayIcon className="w-4 h-4" />
@@ -751,23 +866,40 @@ export default function BulkGenerateBillsPage() {
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bill ID</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Meter</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Bill ID
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Meter
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Customer
+                        </th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                          Amount
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {results.successfulBills.slice(0, 50).map((bill) => (
                         <tr key={bill.billId}>
                           <td className="px-4 py-3 text-sm font-medium text-blue-600">
-                            <a href={`/dashboard/bills/${bill.billId}`} className="hover:underline">
+                            <a
+                              href={`/dashboard/bills/${bill.billId}`}
+                              className="hover:underline"
+                            >
                               #{bill.billId}
                             </a>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-900">{bill.meterSerialNo}</td>
-                          <td className="px-4 py-3 text-sm text-gray-900">{bill.customerName}</td>
+                          <td className="px-4 py-3 text-sm text-gray-900">
+                            {bill.meterSerialNo}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-900">
+                            {bill.customerName}
+                          </td>
                           <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">
                             {formatCurrency(bill.amount)}
                           </td>
@@ -784,7 +916,8 @@ export default function BulkGenerateBillsPage() {
 
                 {results.successfulBills.length > 50 && (
                   <p className="mt-4 text-sm text-gray-600 text-center">
-                    Showing first 50 bills. Total: {results.successfulBills.length} bills
+                    Showing first 50 bills. Total:{" "}
+                    {results.successfulBills.length} bills
                   </p>
                 )}
               </div>
@@ -794,7 +927,9 @@ export default function BulkGenerateBillsPage() {
             {results.failedBills.length > 0 && (
               <div className="bg-white rounded-lg shadow p-6 mb-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">Failed Bills</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Failed Bills
+                  </h2>
                   <div className="flex gap-2">
                     <button
                       onClick={handleRetryFailed}
@@ -804,7 +939,9 @@ export default function BulkGenerateBillsPage() {
                       Retry Failed
                     </button>
                     <button
-                      onClick={() => downloadCSV(results.failedBills, 'failed-bills.csv')}
+                      onClick={() =>
+                        downloadCSV(results.failedBills, "failed-bills.csv")
+                      }
                       className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium"
                     >
                       <ArrowDownTrayIcon className="w-4 h-4" />
@@ -817,17 +954,29 @@ export default function BulkGenerateBillsPage() {
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Meter</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Error Reason</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Meter
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Customer
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Error Reason
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {results.failedBills.map((failure) => (
                         <tr key={failure.meterId}>
-                          <td className="px-4 py-3 text-sm text-gray-900">{failure.meterSerialNo}</td>
-                          <td className="px-4 py-3 text-sm text-gray-900">{failure.customerName}</td>
-                          <td className="px-4 py-3 text-sm text-red-600">{failure.errorReason}</td>
+                          <td className="px-4 py-3 text-sm text-gray-900">
+                            {failure.meterSerialNo}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-900">
+                            {failure.customerName}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-red-600">
+                            {failure.errorReason}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

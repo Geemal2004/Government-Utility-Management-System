@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Users,
@@ -11,8 +11,8 @@ import {
   Zap,
   Flame,
   AlertTriangle,
-} from 'lucide-react';
-import BillingDashboard from '@/components/BillingDashboard';
+} from "lucide-react";
+import BillingDashboard from "@/components/BillingDashboard";
 
 // Stat card component
 function StatCard({
@@ -26,7 +26,7 @@ function StatCard({
   title: string;
   value: string;
   change: string;
-  changeType: 'increase' | 'decrease';
+  changeType: "increase" | "decrease";
   icon: React.ElementType;
   iconColor: string;
 }) {
@@ -42,14 +42,14 @@ function StatCard({
         </div>
       </div>
       <div className="mt-4 flex items-center">
-        {changeType === 'increase' ? (
+        {changeType === "increase" ? (
           <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
         ) : (
           <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
         )}
         <span
           className={`text-sm font-medium ${
-            changeType === 'increase' ? 'text-green-600' : 'text-red-600'
+            changeType === "increase" ? "text-green-600" : "text-red-600"
           }`}
         >
           {change}
@@ -110,17 +110,19 @@ function ActivityItem({
   title: string;
   description: string;
   time: string;
-  type: 'success' | 'warning' | 'info';
+  type: "success" | "warning" | "info";
 }) {
   const colors = {
-    success: 'bg-green-100 text-green-600',
-    warning: 'bg-yellow-100 text-yellow-600',
-    info: 'bg-blue-100 text-blue-600',
+    success: "bg-green-100 text-green-600",
+    warning: "bg-yellow-100 text-yellow-600",
+    info: "bg-blue-100 text-blue-600",
   };
 
   return (
     <div className="flex items-start space-x-3 py-3">
-      <div className={`w-2 h-2 mt-2 rounded-full ${colors[type].split(' ')[0]}`} />
+      <div
+        className={`w-2 h-2 mt-2 rounded-full ${colors[type].split(" ")[0]}`}
+      />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900">{title}</p>
         <p className="text-sm text-gray-500 truncate">{description}</p>
@@ -137,7 +139,8 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-600">
-          Welcome back! Here&apos;s an overview of your utility management system.
+          Welcome back! Here&apos;s an overview of your utility management
+          system.
         </p>
       </div>
 
@@ -207,7 +210,9 @@ export default function DashboardPage() {
 
       {/* Billing Dashboard Section */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Billing Overview</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          Billing Overview
+        </h2>
         <BillingDashboard />
       </div>
 
@@ -216,7 +221,9 @@ export default function DashboardPage() {
         {/* Recent Activity */}
         <div className="card">
           <div className="card-header">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Recent Activity
+            </h2>
           </div>
           <div className="card-body divide-y divide-gray-100">
             <ActivityItem
@@ -267,7 +274,8 @@ export default function DashboardPage() {
                   Critical: Network outage detected
                 </p>
                 <p className="text-sm text-red-600">
-                  Water distribution in Zone 4 affected. Maintenance team dispatched.
+                  Water distribution in Zone 4 affected. Maintenance team
+                  dispatched.
                 </p>
               </div>
             </div>

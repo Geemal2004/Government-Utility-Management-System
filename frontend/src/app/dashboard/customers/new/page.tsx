@@ -1,13 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { ArrowLeft, Plus, Trash2, Loader2, Save } from 'lucide-react';
-import { customersApi } from '@/lib/api/customers';
-import { CreateCustomerDto, CustomerType, IdentityType } from '@/types/customer';
-import { useToast } from '@/components/ui/toast';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useForm, useFieldArray } from "react-hook-form";
+import { ArrowLeft, Plus, Trash2, Loader2, Save } from "lucide-react";
+import { customersApi } from "@/lib/api/customers";
+import {
+  CreateCustomerDto,
+  CustomerType,
+  IdentityType,
+} from "@/types/customer";
+import { useToast } from "@/components/ui/toast";
 
 interface FormData {
   firstName: string;
@@ -39,29 +43,29 @@ export default function NewCustomerPage() {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
       customerType: CustomerType.RESIDENTIAL,
       identityType: IdentityType.NIC,
-      identityRef: '',
+      identityRef: "",
       address: {
-        line1: '',
-        postalCode: '',
+        line1: "",
+        postalCode: "",
       },
-      phoneNumbers: [{ value: '' }],
+      phoneNumbers: [{ value: "" }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'phoneNumbers',
+    name: "phoneNumbers",
   });
 
-  const password = watch('password');
+  const password = watch("password");
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -99,13 +103,25 @@ export default function NewCustomerPage() {
       const response = await customersApi.create(createDto);
 
       if (response.success) {
-        addToast('success', 'Customer Created', `${data.firstName} ${data.lastName} has been added successfully`);
-        router.push('/dashboard/customers');
+        addToast(
+          "success",
+          "Customer Created",
+          `${data.firstName} ${data.lastName} has been added successfully`
+        );
+        router.push("/dashboard/customers");
       } else {
-        addToast('error', 'Creation Failed', response.error || 'Failed to create customer');
+        addToast(
+          "error",
+          "Creation Failed",
+          response.error || "Failed to create customer"
+        );
       }
     } catch (err: any) {
-      addToast('error', 'Creation Failed', err.response?.data?.message || 'Failed to create customer');
+      addToast(
+        "error",
+        "Creation Failed",
+        err.response?.data?.message || "Failed to create customer"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -131,7 +147,9 @@ export default function NewCustomerPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Personal Information */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Personal Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -139,14 +157,18 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="text"
-                {...register('firstName', { required: 'First name is required' })}
+                {...register("firstName", {
+                  required: "First name is required",
+                })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.firstName ? 'border-red-500' : 'border-gray-300'
+                  errors.firstName ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="John"
               />
               {errors.firstName && (
-                <p className="mt-1 text-sm text-red-500">{errors.firstName.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.firstName.message}
+                </p>
               )}
             </div>
             <div>
@@ -155,7 +177,7 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="text"
-                {...register('middleName')}
+                {...register("middleName")}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="William"
               />
@@ -166,14 +188,16 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="text"
-                {...register('lastName', { required: 'Last name is required' })}
+                {...register("lastName", { required: "Last name is required" })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.lastName ? 'border-red-500' : 'border-gray-300'
+                  errors.lastName ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Doe"
               />
               {errors.lastName && (
-                <p className="mt-1 text-sm text-red-500">{errors.lastName.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.lastName.message}
+                </p>
               )}
             </div>
           </div>
@@ -185,19 +209,21 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="email"
-                {...register('email', {
+                {...register("email", {
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Invalid email address',
+                    message: "Invalid email address",
                   },
                 })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
+                  errors.email ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="john.doe@example.com"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div>
@@ -205,7 +231,9 @@ export default function NewCustomerPage() {
                 Customer Type <span className="text-red-500">*</span>
               </label>
               <select
-                {...register('customerType', { required: 'Customer type is required' })}
+                {...register("customerType", {
+                  required: "Customer type is required",
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="RESIDENTIAL">Residential</option>
@@ -219,14 +247,18 @@ export default function NewCustomerPage() {
 
         {/* Identity Information */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Identity Information</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Identity Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Identity Type <span className="text-red-500">*</span>
               </label>
               <select
-                {...register('identityType', { required: 'Identity type is required' })}
+                {...register("identityType", {
+                  required: "Identity type is required",
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="NIC">NIC (National Identity Card)</option>
@@ -241,14 +273,18 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="text"
-                {...register('identityRef', { required: 'Identity reference is required' })}
+                {...register("identityRef", {
+                  required: "Identity reference is required",
+                })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.identityRef ? 'border-red-500' : 'border-gray-300'
+                  errors.identityRef ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="123456789V"
               />
               {errors.identityRef && (
-                <p className="mt-1 text-sm text-red-500">{errors.identityRef.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.identityRef.message}
+                </p>
               )}
             </div>
           </div>
@@ -256,7 +292,9 @@ export default function NewCustomerPage() {
 
         {/* Password */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Account Password</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Account Password
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -264,17 +302,22 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="password"
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: { value: 6, message: 'Password must be at least 6 characters' },
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
                 })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
+                  errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="••••••••"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
             <div>
@@ -283,17 +326,20 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="password"
-                {...register('confirmPassword', {
-                  required: 'Please confirm your password',
-                  validate: (value) => value === password || 'Passwords do not match',
+                {...register("confirmPassword", {
+                  required: "Please confirm your password",
+                  validate: (value) =>
+                    value === password || "Passwords do not match",
                 })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="••••••••"
               />
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.confirmPassword.message}
+                </p>
               )}
             </div>
           </div>
@@ -309,14 +355,18 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="text"
-                {...register('address.line1', { required: 'Address is required' })}
+                {...register("address.line1", {
+                  required: "Address is required",
+                })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.address?.line1 ? 'border-red-500' : 'border-gray-300'
+                  errors.address?.line1 ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="123 Main Street, Apartment 4B"
               />
               {errors.address?.line1 && (
-                <p className="mt-1 text-sm text-red-500">{errors.address.line1.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.address.line1.message}
+                </p>
               )}
             </div>
             <div>
@@ -325,14 +375,20 @@ export default function NewCustomerPage() {
               </label>
               <input
                 type="text"
-                {...register('address.postalCode', { required: 'Postal code is required' })}
+                {...register("address.postalCode", {
+                  required: "Postal code is required",
+                })}
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.address?.postalCode ? 'border-red-500' : 'border-gray-300'
+                  errors.address?.postalCode
+                    ? "border-red-500"
+                    : "border-gray-300"
                 }`}
                 placeholder="10100"
               />
               {errors.address?.postalCode && (
-                <p className="mt-1 text-sm text-red-500">{errors.address.postalCode.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.address.postalCode.message}
+                </p>
               )}
             </div>
           </div>
@@ -341,10 +397,12 @@ export default function NewCustomerPage() {
         {/* Phone Numbers */}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Phone Numbers</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Phone Numbers
+            </h2>
             <button
               type="button"
-              onClick={() => append({ value: '' })}
+              onClick={() => append({ value: "" })}
               className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
             >
               <Plus className="h-4 w-4" />

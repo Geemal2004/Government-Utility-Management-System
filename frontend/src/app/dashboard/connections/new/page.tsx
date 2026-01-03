@@ -52,7 +52,7 @@ export default function NewConnectionPage() {
   const [customers, setCustomers] = useState<CustomerSummary[]>([]);
   const [utilityTypes, setUtilityTypes] = useState<UtilityTypeDetails[]>([]);
   const [tariffCategories, setTariffCategories] = useState<TariffCategory[]>(
-    [],
+    []
   );
   const [availableMeters, setAvailableMeters] = useState<Meter[]>([]);
   const [geoAreas, setGeoAreas] = useState<GeoArea[]>([]);
@@ -132,7 +132,7 @@ export default function NewConnectionPage() {
 
       try {
         const response = await lookupApi.getTariffCategories(
-          selectedUtilityTypeId,
+          selectedUtilityTypeId
         );
         if (response.success && response.data) {
           setTariffCategories(response.data);
@@ -157,7 +157,7 @@ export default function NewConnectionPage() {
 
       try {
         const response = await lookupApi.getAvailableMeters(
-          selectedUtilityTypeId,
+          selectedUtilityTypeId
         );
         if (response.success && response.data) {
           setAvailableMeters(response.data);
@@ -293,14 +293,14 @@ export default function NewConnectionPage() {
         addToast(
           "success",
           "Connection Created",
-          `Service connection #${response.data?.connectionId} has been created successfully`,
+          `Service connection #${response.data?.connectionId} has been created successfully`
         );
         router.push("/dashboard/connections");
       } else {
         addToast(
           "error",
           "Creation Failed",
-          response.error || "Failed to create connection",
+          response.error || "Failed to create connection"
         );
       }
     } catch (err: unknown) {
@@ -508,7 +508,7 @@ export default function NewConnectionPage() {
                     value={field.value || ""}
                     onChange={(e) =>
                       field.onChange(
-                        e.target.value ? parseInt(e.target.value) : null,
+                        e.target.value ? parseInt(e.target.value) : null
                       )
                     }
                     disabled={!selectedUtilityTypeId}
@@ -567,7 +567,7 @@ export default function NewConnectionPage() {
                   value={field.value || ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? parseInt(e.target.value) : null,
+                      e.target.value ? parseInt(e.target.value) : null
                     )
                   }
                   disabled={!selectedUtilityTypeId}
@@ -690,7 +690,7 @@ export default function NewConnectionPage() {
                     value={field.value || ""}
                     onChange={(e) =>
                       field.onChange(
-                        e.target.value ? parseInt(e.target.value) : null,
+                        e.target.value ? parseInt(e.target.value) : null
                       )
                     }
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -740,7 +740,7 @@ export default function NewConnectionPage() {
                   value={field.value || ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? parseInt(e.target.value) : null,
+                      e.target.value ? parseInt(e.target.value) : null
                     )
                   }
                   disabled={!selectedUtilityTypeId}

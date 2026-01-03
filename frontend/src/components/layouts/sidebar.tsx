@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -17,8 +17,8 @@ import {
   Droplets,
   Zap,
   Flame,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
   name: string;
@@ -28,21 +28,21 @@ interface NavItem {
 }
 
 const navigation: NavItem[] = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Customers', href: '/dashboard/customers', icon: Users },
-  { name: 'Connections', href: '/dashboard/connections', icon: Cable },
-  { name: 'Meters', href: '/dashboard/meters', icon: Gauge },
-  { name: 'Readings', href: '/dashboard/readings', icon: Gauge },
-  { name: 'Bills', href: '/dashboard/bills', icon: FileText },
-  { name: 'Payments', href: '/dashboard/payments', icon: CreditCard },
-  { name: 'Work Orders', href: '/dashboard/work-orders', icon: Wrench },
-  { name: 'Inventory', href: '/dashboard/inventory', icon: Package },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Customers", href: "/dashboard/customers", icon: Users },
+  { name: "Connections", href: "/dashboard/connections", icon: Cable },
+  { name: "Meters", href: "/dashboard/meters", icon: Gauge },
+  { name: "Readings", href: "/dashboard/readings", icon: Gauge },
+  { name: "Bills", href: "/dashboard/bills", icon: FileText },
+  { name: "Payments", href: "/dashboard/payments", icon: CreditCard },
+  { name: "Work Orders", href: "/dashboard/work-orders", icon: Wrench },
+  { name: "Inventory", href: "/dashboard/inventory", icon: Package },
 ];
 
 const utilityTypes = [
-  { name: 'Water', icon: Droplets, color: 'text-blue-500' },
-  { name: 'Electricity', icon: Zap, color: 'text-yellow-500' },
-  { name: 'Gas', icon: Flame, color: 'text-orange-500' },
+  { name: "Water", icon: Droplets, color: "text-blue-500" },
+  { name: "Electricity", icon: Zap, color: "text-yellow-500" },
+  { name: "Gas", icon: Flame, color: "text-orange-500" },
 ];
 
 export function Sidebar() {
@@ -52,8 +52,8 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300',
-        isCollapsed ? 'w-20' : 'w-64'
+        "fixed left-0 top-0 z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300",
+        isCollapsed ? "w-20" : "w-64"
       )}
     >
       {/* Logo */}
@@ -74,8 +74,8 @@ export function Sidebar() {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className={cn(
-            'p-1.5 rounded-lg hover:bg-gray-100 text-gray-500',
-            isCollapsed && 'mx-auto mt-2'
+            "p-1.5 rounded-lg hover:bg-gray-100 text-gray-500",
+            isCollapsed && "mx-auto mt-2"
           )}
         >
           {isCollapsed ? (
@@ -97,15 +97,17 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                'flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                "flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                 isActive
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                isCollapsed && 'justify-center px-2'
+                  ? "bg-primary-50 text-primary-700"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                isCollapsed && "justify-center px-2"
               )}
               title={isCollapsed ? item.name : undefined}
             >
-              <Icon className={cn('h-5 w-5 flex-shrink-0', !isCollapsed && 'mr-3')} />
+              <Icon
+                className={cn("h-5 w-5 flex-shrink-0", !isCollapsed && "mr-3")}
+              />
               {!isCollapsed && <span>{item.name}</span>}
             </Link>
           );
@@ -127,8 +129,10 @@ export function Sidebar() {
                   className="flex flex-col items-center text-center"
                   title={utility.name}
                 >
-                  <Icon className={cn('h-5 w-5', utility.color)} />
-                  <span className="text-xs text-gray-500 mt-1">{utility.name}</span>
+                  <Icon className={cn("h-5 w-5", utility.color)} />
+                  <span className="text-xs text-gray-500 mt-1">
+                    {utility.name}
+                  </span>
                 </div>
               );
             })}

@@ -58,7 +58,7 @@ export default function EditConnectionPage() {
 
   // Lookup data
   const [tariffCategories, setTariffCategories] = useState<TariffCategory[]>(
-    [],
+    []
   );
   const [availableMeters, setAvailableMeters] = useState<Meter[]>([]);
   const [geoAreas, setGeoAreas] = useState<GeoArea[]>([]);
@@ -227,14 +227,14 @@ export default function EditConnectionPage() {
         addToast(
           "success",
           "Connection Updated",
-          `Service connection #${connectionId} has been updated successfully`,
+          `Service connection #${connectionId} has been updated successfully`
         );
         router.push(`/dashboard/connections/${connectionId}`);
       } else {
         addToast(
           "error",
           "Update Failed",
-          response.error || "Failed to update connection",
+          response.error || "Failed to update connection"
         );
       }
     } catch (err: unknown) {
@@ -341,7 +341,9 @@ export default function EditConnectionPage() {
           {/* Utility Type */}
           <div className="flex items-start gap-3">
             <div
-              className={`p-2 rounded-full border ${getUtilityBadgeColor(connection.utilityType?.name)}`}
+              className={`p-2 rounded-full border ${getUtilityBadgeColor(
+                connection.utilityType?.name
+              )}`}
             >
               {getUtilityIcon(connection.utilityType?.name)}
             </div>
@@ -405,12 +407,12 @@ export default function EditConnectionPage() {
                           status === ConnectionStatus.ACTIVE
                             ? "bg-green-500"
                             : status === ConnectionStatus.INACTIVE
-                              ? "bg-gray-500"
-                              : status === ConnectionStatus.SUSPENDED
-                                ? "bg-yellow-500"
-                                : status === ConnectionStatus.DISCONNECTED
-                                  ? "bg-red-500"
-                                  : "bg-blue-500"
+                            ? "bg-gray-500"
+                            : status === ConnectionStatus.SUSPENDED
+                            ? "bg-yellow-500"
+                            : status === ConnectionStatus.DISCONNECTED
+                            ? "bg-red-500"
+                            : "bg-blue-500"
                         }`}
                       />
                       <span className="text-sm font-medium">{status}</span>
@@ -450,7 +452,7 @@ export default function EditConnectionPage() {
                   value={field.value || ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? parseInt(e.target.value) : null,
+                      e.target.value ? parseInt(e.target.value) : null
                     )
                   }
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -503,7 +505,7 @@ export default function EditConnectionPage() {
                   value={field.value || ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? parseInt(e.target.value) : null,
+                      e.target.value ? parseInt(e.target.value) : null
                     )
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -621,7 +623,7 @@ export default function EditConnectionPage() {
                     value={field.value || ""}
                     onChange={(e) =>
                       field.onChange(
-                        e.target.value ? parseInt(e.target.value) : null,
+                        e.target.value ? parseInt(e.target.value) : null
                       )
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -662,7 +664,7 @@ export default function EditConnectionPage() {
                   value={field.value || ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? parseInt(e.target.value) : null,
+                      e.target.value ? parseInt(e.target.value) : null
                     )
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
