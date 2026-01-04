@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { setCustomerToken, setCustomerData } from '@/lib/auth/customerAuth';
 import { Eye, EyeOff, Lock, Mail, Shield, FileText, Clock, TrendingUp } from 'lucide-react';
 
 interface CustomerLoginForm {
@@ -28,6 +29,7 @@ export default function CustomerLoginPage() {
         setError('');
 
         try {
+            console.log('Starting login...');
             const response = await fetch('/api/v1/auth/customer/login', {
                 method: 'POST',
                 headers: {
@@ -39,25 +41,30 @@ export default function CustomerLoginPage() {
                 }),
             });
 
+            console.log('Response status:', response.status);
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Invalid credentials');
             }
 
-            const { accessToken, customer } = await response.json();
+            const responseData = await response.json();
+            console.log('Response data:', responseData);
 
-            // Store token
-            if (data.rememberMe) {
-                localStorage.setItem('customerToken', accessToken);
-                localStorage.setItem('customer', JSON.stringify(customer));
-            } else {
-                sessionStorage.setItem('customerToken', accessToken);
-                sessionStorage.setItem('customer', JSON.stringify(customer));
-            }
+            const { accessToken, customer } = responseData.data || responseData;
+            console.log('Access token:', accessToken ? 'present' : 'missing');
+            console.log('Customer:', customer);
 
-            // Redirect to customer dashboard
-            router.push('/customer/dashboard');
+            // Store token and customer data using auth utilities
+            setCustomerToken(accessToken, data.rememberMe);
+            setCustomerData(customer, data.rememberMe);
+
+            console.log('Data stored, redirecting...');
+
+            // Force redirect using window.location instead of router
+            window.location.href = '/customer/dashboard';
         } catch (err) {
+            console.error('Login error:', err);
             setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
         } finally {
             setIsLoading(false);
@@ -193,8 +200,8 @@ export default function CustomerLoginPage() {
                                             type="text"
                                             placeholder="Enter your Customer ID or Email"
                                             className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${errors.identifier
-                                                    ? 'border-red-300 bg-red-50'
-                                                    : 'border-gray-200 hover:border-gray-300'
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200 hover:border-gray-300'
                                                 }`}
                                         />
                                     </div>
@@ -229,8 +236,8 @@ export default function CustomerLoginPage() {
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="Enter your password"
                                             className={`w-full pl-12 pr-12 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${errors.password
-                                                    ? 'border-red-300 bg-red-50'
-                                                    : 'border-gray-200 hover:border-gray-300'
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200 hover:border-gray-300'
                                                 }`}
                                         />
                                         <button

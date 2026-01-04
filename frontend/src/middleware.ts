@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Paths that don't require authentication
-const publicPaths = ['/login', '/forgot-password', '/reset-password'];
+// Paths that don't require authentication (employee auth)
+// Note: /customer/* paths use their own auth (localStorage-based) via withCustomerAuth HOC
+const publicPaths = ['/login', '/forgot-password', '/reset-password', '/auth', '/customer'];
 
-// Paths that should redirect authenticated users
+// Paths that should redirect authenticated employees
 const authPaths = ['/login'];
 
 export function middleware(request: NextRequest) {

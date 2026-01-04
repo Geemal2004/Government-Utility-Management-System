@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nes
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { CustomerLoginDto } from './dto/customer-login.dto';
+import { CustomerLoginResponseDto } from './dto/customer-login-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ApiResponseDto } from '../common/dto/api-response.dto';
 import { EmployeeResponseDto } from '../employees/dto/employee-response.dto';
@@ -10,7 +12,7 @@ import { EmployeeResponseDto } from '../employees/dto/employee-response.dto';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   @ApiOperation({ summary: 'Employee login' })
@@ -26,6 +28,22 @@ export class AuthController {
   })
   async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     return await this.authService.login(loginDto);
+  }
+
+  @Post('customer/login')
+  @ApiOperation({ summary: 'Customer login' })
+  @ApiBody({ type: CustomerLoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Customer login successful',
+    type: CustomerLoginResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid credentials',
+  })
+  async customerLogin(@Body() loginDto: CustomerLoginDto): Promise<CustomerLoginResponseDto> {
+    return await this.authService.customerLogin(loginDto);
   }
 
   @Get('profile')

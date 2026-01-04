@@ -17,7 +17,7 @@ export function withCustomerAuth<P extends object>(
 
         useEffect(() => {
             if (!isLoading && !isAuthenticated) {
-                router.push('/customer-login');
+                router.push('/auth/customer-login');
             }
         }, [isAuthenticated, isLoading, router]);
 

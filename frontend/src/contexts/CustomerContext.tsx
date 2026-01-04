@@ -64,7 +64,7 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
         removeCustomerToken();
         setCustomer(null);
         setIsAuthenticated(false);
-        router.push('/customer-login');
+        router.push('/auth/customer-login');
     };
 
     /**
