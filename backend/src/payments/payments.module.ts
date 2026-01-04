@@ -11,7 +11,7 @@ import { StripeModule } from '../stripe/stripe.module';
 
 /**
  * Payments Module
- * 
+ *
  * Handles all payment-related functionality including:
  * - Recording payments (cashier and online)
  * - Stripe integration for online payments
@@ -19,18 +19,13 @@ import { StripeModule } from '../stripe/stripe.module';
  * - Refund processing
  */
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Payment,
-            Bill,
-            Customer,
-            Employee,
-        ]),
-        StripeModule,
-        ConfigModule,
-    ],
-    controllers: [PaymentController],
-    providers: [PaymentService],
-    exports: [PaymentService],
+  imports: [
+    TypeOrmModule.forFeature([Payment, Bill, Customer, Employee]),
+    StripeModule,
+    ConfigModule,
+  ],
+  controllers: [PaymentController],
+  providers: [PaymentService],
+  exports: [PaymentService],
 })
-export class PaymentsModule { }
+export class PaymentsModule {}

@@ -94,6 +94,40 @@ export class PaymentSummaryDto {
     byChannel: PaymentBreakdownDto[];
 
     @ApiProperty({
+        description: 'Breakdown by payment status',
+        type: [PaymentBreakdownDto],
+        example: [
+            { category: 'COMPLETED', count: 45, amount: 120000 },
+            { category: 'PENDING', count: 3, amount: 3000 },
+            { category: 'FAILED', count: 2, amount: 2000 },
+        ],
+    })
+    @Expose()
+    @Type(() => PaymentBreakdownDto)
+    byStatus: PaymentBreakdownDto[];
+
+    @ApiProperty({
+        description: 'Stripe payment success rate (percentage)',
+        example: 95.5,
+    })
+    @Expose()
+    stripeSuccessRate: number;
+
+    @ApiProperty({
+        description: 'Count of failed payments',
+        example: 2,
+    })
+    @Expose()
+    failedCount: number;
+
+    @ApiProperty({
+        description: 'Total amount refunded',
+        example: 5000.0,
+    })
+    @Expose()
+    refundedAmount: number;
+
+    @ApiProperty({
         description: 'Summary period',
         type: PaymentPeriodDto,
     })

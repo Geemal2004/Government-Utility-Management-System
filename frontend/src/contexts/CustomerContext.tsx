@@ -11,7 +11,7 @@ import {
     removeCustomerToken,
     isCustomerAuthenticated,
     getCustomerAuthHeader,
-} from '../auth/customerAuth';
+} from '@/lib/auth/customerAuth';
 
 interface CustomerContextType {
     customer: CustomerData | null;

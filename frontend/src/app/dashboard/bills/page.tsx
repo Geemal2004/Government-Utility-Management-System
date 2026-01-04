@@ -84,7 +84,7 @@ export default function BillsPage() {
       const result: { bills: Bill[]; total: number } = await response.json();
       setBills(result.bills || []);
       setTotal(result.total || 0);
-      setTotalPages(Math.ceil((result.total || 0) / filters.limit));
+      setTotalPages(Math.ceil((result.total || 0) / (filters.limit || 25)));
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       console.error("Error fetching bills:", err);
@@ -672,11 +672,14 @@ export default function BillsPage() {
                   <p className="text-sm text-gray-700">
                     Showing{" "}
                     <span className="font-medium">
-                      {(filters.page! - 1) * filters.limit! + 1}
+                      {((filters.page || 1) - 1) * (filters.limit || 25) + 1}
                     </span>{" "}
                     to{" "}
                     <span className="font-medium">
-                      {Math.min(filters.page! * filters.limit!, total)}
+                      {Math.min(
+                        (filters.page || 1) * (filters.limit || 25),
+                        total
+                      )}
                     </span>{" "}
                     of <span className="font-medium">{total}</span> results
                   </p>

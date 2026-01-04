@@ -71,9 +71,9 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     BillingModule,
 
     // Payment & Stripe modules
-    StripeModule,      // Global Stripe client
-    PaymentsModule,    // Payment processing
-    WebhooksModule,    // Stripe webhooks
+    StripeModule, // Global Stripe client
+    PaymentsModule, // Payment processing
+    WebhooksModule, // Stripe webhooks
   ],
 })
 export class AppModule {}

@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import {
   IsNotEmpty,
   IsNumber,
@@ -34,19 +27,19 @@ import { Customer } from './customer.entity';
  */
 export enum PaymentMethod {
   // Online payments (Stripe)
-  STRIPE_CARD = 'STRIPE_CARD',           // Online card payment via Stripe
-  STRIPE_WALLET = 'STRIPE_WALLET',       // Apple Pay, Google Pay via Stripe
+  STRIPE_CARD = 'STRIPE_CARD', // Online card payment via Stripe
+  STRIPE_WALLET = 'STRIPE_WALLET', // Apple Pay, Google Pay via Stripe
 
   // Offline payments (Office/Cashier)
-  CASH = 'CASH',                         // Cash payment at office
-  CARD_TERMINAL = 'CARD_TERMINAL',       // Physical card terminal at office
-  BANK_TRANSFER = 'BANK_TRANSFER',       // Bank transfer
-  CHEQUE = 'CHEQUE',                     // Cheque payment
+  CASH = 'CASH', // Cash payment at office
+  CARD_TERMINAL = 'CARD_TERMINAL', // Physical card terminal at office
+  BANK_TRANSFER = 'BANK_TRANSFER', // Bank transfer
+  CHEQUE = 'CHEQUE', // Cheque payment
 
   // Legacy (keeping for backward compatibility)
-  CARD = 'CARD',                         // Generic card (deprecated, use STRIPE_CARD or CARD_TERMINAL)
-  ONLINE = 'ONLINE',                     // Generic online (deprecated, use STRIPE_CARD/STRIPE_WALLET)
-  MOBILE_MONEY = 'MOBILE_MONEY',         // Mobile money payments
+  CARD = 'CARD', // Generic card (deprecated, use STRIPE_CARD or CARD_TERMINAL)
+  ONLINE = 'ONLINE', // Generic online (deprecated, use STRIPE_CARD/STRIPE_WALLET)
+  MOBILE_MONEY = 'MOBILE_MONEY', // Mobile money payments
 }
 /**
  * Payment methods that require a transaction reference
@@ -77,15 +70,15 @@ export const STRIPE_PAYMENT_METHODS: PaymentMethod[] = [
  * Defines where the payment was initiated/received
  */
 export enum PaymentChannel {
-  CUSTOMER_PORTAL = 'CUSTOMER_PORTAL',   // Self-service online payment
-  CASHIER_PORTAL = 'CASHIER_PORTAL',     // Office counter payment
-  MOBILE_APP = 'MOBILE_APP',             // Mobile app payment (future)
+  CUSTOMER_PORTAL = 'CUSTOMER_PORTAL', // Self-service online payment
+  CASHIER_PORTAL = 'CASHIER_PORTAL', // Office counter payment
+  MOBILE_APP = 'MOBILE_APP', // Mobile app payment (future)
 
   // Legacy (keeping for backward compatibility)
-  OFFICE = 'OFFICE',                     // Office (deprecated, use CASHIER_PORTAL)
-  WEBSITE = 'WEBSITE',                   // Website (deprecated, use CUSTOMER_PORTAL)
-  BANK = 'BANK',                         // Direct bank payment
-  ATM = 'ATM',                           // ATM payment
+  OFFICE = 'OFFICE', // Office (deprecated, use CASHIER_PORTAL)
+  WEBSITE = 'WEBSITE', // Website (deprecated, use CUSTOMER_PORTAL)
+  BANK = 'BANK', // Direct bank payment
+  ATM = 'ATM', // ATM payment
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,11 +90,11 @@ export enum PaymentChannel {
  * Tracks the lifecycle of a payment, especially for async Stripe payments
  */
 export enum PaymentStatus {
-  PENDING = 'PENDING',       // Payment initiated but not yet confirmed (Stripe webhook pending)
-  COMPLETED = 'COMPLETED',   // Payment successfully processed
-  FAILED = 'FAILED',         // Payment failed (card declined, etc.)
-  REFUNDED = 'REFUNDED',     // Payment has been refunded
-  CANCELLED = 'CANCELLED',   // Payment was cancelled before completion
+  PENDING = 'PENDING', // Payment initiated but not yet confirmed (Stripe webhook pending)
+  COMPLETED = 'COMPLETED', // Payment successfully processed
+  FAILED = 'FAILED', // Payment failed (card declined, etc.)
+  REFUNDED = 'REFUNDED', // Payment has been refunded
+  CANCELLED = 'CANCELLED', // Payment was cancelled before completion
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -172,7 +165,9 @@ export class StripePaymentIntentRequiredConstraint implements ValidatorConstrain
     const isStripePayment = STRIPE_PAYMENT_METHODS.includes(payment.paymentMethod);
 
     if (isStripePayment) {
-      return payment.stripePaymentIntentId !== null && payment.stripePaymentIntentId.trim().length > 0;
+      return (
+        payment.stripePaymentIntentId !== null && payment.stripePaymentIntentId.trim().length > 0
+      );
     }
     return true;
   }
@@ -233,7 +228,10 @@ function RequiresStripePaymentIntent(validationOptions?: ValidationOptions) {
 @Index('IX_Payment_customer', ['customerId'])
 @Index('IX_Payment_transaction_ref', ['transactionRef'])
 @Index('IX_Payment_status', ['paymentStatus'])
-@Index('IX_Payment_stripe_intent', ['stripePaymentIntentId'], { unique: true, where: 'stripe_payment_intent_id IS NOT NULL' })
+@Index('IX_Payment_stripe_intent', ['stripePaymentIntentId'], {
+  unique: true,
+  where: 'stripe_payment_intent_id IS NOT NULL',
+})
 @Index('IX_Payment_customer_date', ['customerId', 'paymentDate'])
 export class Payment {
   // ─────────────────────────────────────────────────────────────────────────────
@@ -387,17 +385,21 @@ export class Payment {
    * Check if this is an online (self-service) payment
    */
   isOnlinePayment(): boolean {
-    return this.paymentChannel === PaymentChannel.CUSTOMER_PORTAL ||
+    return (
+      this.paymentChannel === PaymentChannel.CUSTOMER_PORTAL ||
       this.paymentChannel === PaymentChannel.MOBILE_APP ||
-      this.paymentChannel === PaymentChannel.WEBSITE;
+      this.paymentChannel === PaymentChannel.WEBSITE
+    );
   }
 
   /**
    * Check if this is a cashier/office payment
    */
   isCashierPayment(): boolean {
-    return this.paymentChannel === PaymentChannel.CASHIER_PORTAL ||
-      this.paymentChannel === PaymentChannel.OFFICE;
+    return (
+      this.paymentChannel === PaymentChannel.CASHIER_PORTAL ||
+      this.paymentChannel === PaymentChannel.OFFICE
+    );
   }
 
   /**
