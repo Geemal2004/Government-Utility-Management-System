@@ -103,10 +103,11 @@ function CustomerPaymentPage() {
                 throw new Error('Stripe failed to load');
             }
 
-            const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
+            // Redirect to Stripe checkout
+            const result = await (stripe as any).redirectToCheckout({ sessionId });
 
-            if (stripeError) {
-                throw new Error(stripeError.message);
+            if (result && result.error) {
+                throw new Error(result.error.message);
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Payment initiation failed');
