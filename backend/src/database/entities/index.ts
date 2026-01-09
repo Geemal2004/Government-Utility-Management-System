@@ -23,6 +23,23 @@ export * from './bill-detail.entity';
 export * from './bill-tax.entity';
 export * from './payment.entity';
 
+// Inventory related entities (placeholders for Phase 9)
+export * from './item.entity';
+export * from './warehouse.entity';
+export * from './stock-transaction.entity';
+
+// Work Orders & Maintenance related entities (Phase 8)
+export * from './asset.entity';
+export * from './maintenance-request.entity';
+export * from './work-order.entity';
+export * from './work-order-labor.entity';
+export * from './work-order-item-usage.entity';
+export * from './disconnection-order.entity';
+export * from './reconnection-order.entity';
+export * from './complaint.entity';
+export * from './outage.entity';
+export * from './asset-outage.entity';
+
 // Payroll related entities
 export * from './payroll-run.entity';
 export * from './payslip.entity';

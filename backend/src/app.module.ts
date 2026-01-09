@@ -14,6 +14,9 @@ import { BillingModule } from './billing/billing.module';
 import { StripeModule } from './stripe/stripe.module';
 import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { AssetsModule } from './assets/assets.module';
+import { WorkOrdersModule } from './work-orders/work-orders.module';
+import { ComplaintsModule } from './complaints/complaints.module';
 import { PayrollModule } from './payroll/payroll.module';
 
 @Module({
@@ -77,6 +80,11 @@ import { PayrollModule } from './payroll/payroll.module';
     StripeModule, // Global Stripe client
     PaymentsModule, // Payment processing
     WebhooksModule, // Stripe webhooks
+
+    // Phase 8: Work Orders & Maintenance modules
+    AssetsModule,
+    WorkOrdersModule,
+    ComplaintsModule,
 
     // Payroll module
     PayrollModule,
