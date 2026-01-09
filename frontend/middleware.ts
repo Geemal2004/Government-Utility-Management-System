@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
     if (pathname.startsWith('/customer')) {
         // Exclude login and public pages
         const publicCustomerPages = [
-            '/customer-login',
+            '/auth/customer-login',
             '/customer/register',
             '/customer/forgot-password',
             '/customer/reset-password',
@@ -30,13 +30,11 @@ export function middleware(request: NextRequest) {
         }
 
         // Check for customer token in cookies (set by client-side)
-        // Note: Since we're using localStorage/sessionStorage on client,
-        // we need to check for a cookie-based token if we want server-side protection
         const customerToken = request.cookies.get('customerToken')?.value;
 
         // If no token, redirect to login
         if (!customerToken) {
-            const loginUrl = new URL('/customer-login', request.url);
+            const loginUrl = new URL('/auth/customer-login', request.url);
             loginUrl.searchParams.set('redirect', pathname);
             return NextResponse.redirect(loginUrl);
         }

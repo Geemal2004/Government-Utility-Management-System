@@ -49,8 +49,12 @@ export function setCustomerToken(token: string, remember: boolean = false): void
 
     if (remember) {
         localStorage.setItem(CUSTOMER_TOKEN_KEY, token);
+        // Set cookie with longer expiry (30 days)
+        document.cookie = `customerToken=${token}; path=/; max-age=${30 * 24 * 60 * 60}; SameSite=Lax`;
     } else {
         sessionStorage.setItem(CUSTOMER_TOKEN_KEY, token);
+        // Set session cookie (expires when browser closes)
+        document.cookie = `customerToken=${token}; path=/; SameSite=Lax`;
     }
 }
 
@@ -64,6 +68,9 @@ export function removeCustomerToken(): void {
     sessionStorage.removeItem(CUSTOMER_TOKEN_KEY);
     localStorage.removeItem(CUSTOMER_DATA_KEY);
     sessionStorage.removeItem(CUSTOMER_DATA_KEY);
+    
+    // Remove cookie by setting max-age to 0
+    document.cookie = 'customerToken=; path=/; max-age=0; SameSite=Lax';
 }
 
 /**
