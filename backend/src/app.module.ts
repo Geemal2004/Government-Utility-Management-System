@@ -15,6 +15,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { AssetsModule } from './assets/assets.module';
 import { WorkOrdersModule } from './work-orders/work-orders.module';
+import { ComplaintsModule } from './complaints/complaints.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { WorkOrdersModule } from './work-orders/work-orders.module';
     // Phase 8: Work Orders & Maintenance modules
     AssetsModule,
     WorkOrdersModule,
+    ComplaintsModule,
   ],
 })
 export class AppModule {}
