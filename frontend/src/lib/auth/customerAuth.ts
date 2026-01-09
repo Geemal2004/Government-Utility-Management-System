@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const CUSTOMER_TOKEN_KEY = 'customerToken';
 const CUSTOMER_DATA_KEY = 'customerData';
+const COOKIE_MAX_AGE_DAYS = 30; // 30 days for remember me
 
 export interface CustomerData {
     customerId: number;
@@ -22,6 +23,15 @@ export interface DecodedToken {
     email: string;
     exp: number;
     iat: number;
+}
+
+/**
+ * Helper function to get cookie security flags
+ */
+function getCookieSecurityFlags(): string {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const secureFlag = isProduction ? '; Secure' : '';
+    return `; path=/; SameSite=Lax${secureFlag}`;
 }
 
 /**
@@ -47,10 +57,17 @@ export function getCustomerToken(): string | null {
 export function setCustomerToken(token: string, remember: boolean = false): void {
     if (typeof window === 'undefined') return;
 
+    const securityFlags = getCookieSecurityFlags();
+
     if (remember) {
         localStorage.setItem(CUSTOMER_TOKEN_KEY, token);
+        // Set cookie with longer expiry (30 days)
+        const maxAge = COOKIE_MAX_AGE_DAYS * 24 * 60 * 60; // Convert days to seconds
+        document.cookie = `customerToken=${token}${securityFlags}; max-age=${maxAge}`;
     } else {
         sessionStorage.setItem(CUSTOMER_TOKEN_KEY, token);
+        // Set session cookie (expires when browser closes)
+        document.cookie = `customerToken=${token}${securityFlags}`;
     }
 }
 
@@ -64,6 +81,10 @@ export function removeCustomerToken(): void {
     sessionStorage.removeItem(CUSTOMER_TOKEN_KEY);
     localStorage.removeItem(CUSTOMER_DATA_KEY);
     sessionStorage.removeItem(CUSTOMER_DATA_KEY);
+    
+    // Remove cookie by setting max-age to 0 (use same security flags for proper cleanup)
+    const securityFlags = getCookieSecurityFlags();
+    document.cookie = `customerToken=;${securityFlags}; max-age=0`;
 }
 
 /**
