@@ -47,14 +47,18 @@ export function getCustomerToken(): string | null {
 export function setCustomerToken(token: string, remember: boolean = false): void {
     if (typeof window === 'undefined') return;
 
+    // Determine if we should use Secure flag (only in production with HTTPS)
+    const isProduction = process.env.NODE_ENV === 'production';
+    const secureFlag = isProduction ? '; Secure' : '';
+
     if (remember) {
         localStorage.setItem(CUSTOMER_TOKEN_KEY, token);
         // Set cookie with longer expiry (30 days)
-        document.cookie = `customerToken=${token}; path=/; max-age=${30 * 24 * 60 * 60}; SameSite=Lax`;
+        document.cookie = `customerToken=${token}; path=/; max-age=${30 * 24 * 60 * 60}; SameSite=Lax${secureFlag}`;
     } else {
         sessionStorage.setItem(CUSTOMER_TOKEN_KEY, token);
         // Set session cookie (expires when browser closes)
-        document.cookie = `customerToken=${token}; path=/; SameSite=Lax`;
+        document.cookie = `customerToken=${token}; path=/; SameSite=Lax${secureFlag}`;
     }
 }
 
