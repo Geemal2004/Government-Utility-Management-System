@@ -8,9 +8,6 @@ export { connectionsApi } from './connections';
 export { lookupApi } from './lookup';
 export { readingsApi } from './readings';
 export { billingApi } from './billing';
-export { workOrdersApi } from './work-orders';
-export { assetsApi } from './assets';
-export { complaintsApi } from './complaints';
 
 // Re-export types
 export type { CustomersQueryParams } from './customers';

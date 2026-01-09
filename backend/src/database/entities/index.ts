@@ -22,6 +22,8 @@ export * from './bill.entity';
 export * from './bill-detail.entity';
 export * from './bill-tax.entity';
 export * from './payment.entity';
+<<<<<<< HEAD
+<<<<<<< HEAD
 
 // Inventory related entities (placeholders for Phase 9)
 export * from './item.entity';
@@ -39,3 +41,16 @@ export * from './reconnection-order.entity';
 export * from './complaint.entity';
 export * from './outage.entity';
 export * from './asset-outage.entity';
+
+// Payroll related entities
+export * from './payroll-run.entity';
+export * from './payslip.entity';
+export * from './payslip-component.entity';
+export * from './salary-component-type.entity';
+
+// Employee role entities
+export * from './meter-reader.entity';
+=======
+>>>>>>> parent of 40dd277 (Merge pull request #5 from Geemal2004/copilot/implement-work-orders-system)
+=======
+>>>>>>> parent of 40dd277 (Merge pull request #5 from Geemal2004/copilot/implement-work-orders-system)

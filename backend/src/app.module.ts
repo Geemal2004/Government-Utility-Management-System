@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './auth/auth.module';
 import { EmployeesModule } from './employees/employees.module';
+import { DepartmentModule } from './departments/department.module';
 import { CustomersModule } from './customers/customers.module';
 import { ConnectionsModule } from './connections/connections.module';
 import { LookupModule } from './lookup/lookup.module';
@@ -13,9 +14,16 @@ import { BillingModule } from './billing/billing.module';
 import { StripeModule } from './stripe/stripe.module';
 import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { AssetsModule } from './assets/assets.module';
 import { WorkOrdersModule } from './work-orders/work-orders.module';
 import { ComplaintsModule } from './complaints/complaints.module';
+import { PayrollModule } from './payroll/payroll.module';
+=======
+>>>>>>> parent of 40dd277 (Merge pull request #5 from Geemal2004/copilot/implement-work-orders-system)
+=======
+>>>>>>> parent of 40dd277 (Merge pull request #5 from Geemal2004/copilot/implement-work-orders-system)
 
 @Module({
   imports: [
@@ -67,6 +75,7 @@ import { ComplaintsModule } from './complaints/complaints.module';
     DatabaseModule,
     AuthModule,
     EmployeesModule,
+    DepartmentModule,
     CustomersModule,
     ConnectionsModule,
     LookupModule,
@@ -77,11 +86,20 @@ import { ComplaintsModule } from './complaints/complaints.module';
     StripeModule, // Global Stripe client
     PaymentsModule, // Payment processing
     WebhooksModule, // Stripe webhooks
+<<<<<<< HEAD
+<<<<<<< HEAD
 
     // Phase 8: Work Orders & Maintenance modules
     AssetsModule,
     WorkOrdersModule,
     ComplaintsModule,
+
+    // Payroll module
+    PayrollModule,
+=======
+>>>>>>> parent of 40dd277 (Merge pull request #5 from Geemal2004/copilot/implement-work-orders-system)
+=======
+>>>>>>> parent of 40dd277 (Merge pull request #5 from Geemal2004/copilot/implement-work-orders-system)
   ],
 })
-export class AppModule {}
+export class AppModule { }

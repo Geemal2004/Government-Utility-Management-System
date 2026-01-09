@@ -1,6 +1,7 @@
 "use client";
 
 import { CustomerProvider } from "@/contexts/CustomerContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 /**
  * Client-side providers wrapper
@@ -8,8 +9,11 @@ import { CustomerProvider } from "@/contexts/CustomerContext";
  */
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <CustomerProvider>
-            {children}
-        </CustomerProvider>
+        <AuthProvider>
+            <CustomerProvider>
+                {children}
+            </CustomerProvider>
+        </AuthProvider>
     );
 }
+

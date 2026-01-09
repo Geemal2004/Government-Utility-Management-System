@@ -6,7 +6,9 @@ import {
     Payment,
     PaymentMethod,
     PaymentChannel,
-    PaymentFilterDto,
+    PaymentFilters,
+    PaymentSummary,
+    PaginatedPaymentResponse,
 } from "@/types/payment";
 import {
     MagnifyingGlassIcon,

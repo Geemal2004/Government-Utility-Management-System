@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @returns Employee data to be attached to request.user
    */
   async validate(payload: JwtPayload) {
-    const employee = await this.employeesService.findById(payload.sub);
+    const employee = await this.employeesService.findByIdEntity(payload.sub);
 
     if (!employee) {
       throw new UnauthorizedException('Invalid token - employee not found');
