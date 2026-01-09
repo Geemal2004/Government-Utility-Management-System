@@ -148,7 +148,7 @@ export class AuthService {
    * @throws UnauthorizedException if employee not found
    */
   async validateJwtPayload(payload: JwtPayload): Promise<Employee> {
-    const employee = await this.employeesService.findById(payload.sub);
+    const employee = await this.employeesService.findByIdEntity(payload.sub);
 
     if (!employee) {
       throw new UnauthorizedException('Invalid token');

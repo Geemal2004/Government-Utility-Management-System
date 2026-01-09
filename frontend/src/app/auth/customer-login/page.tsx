@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { setCustomerToken, setCustomerData } from '@/lib/auth/customerAuth';
+import { useCustomerAuth } from '@/contexts/CustomerContext';
 import { Eye, EyeOff, Lock, Mail, Shield, FileText, Clock, TrendingUp } from 'lucide-react';
 
 interface CustomerLoginForm {
@@ -14,6 +14,7 @@ interface CustomerLoginForm {
 
 export default function CustomerLoginPage() {
     const router = useRouter();
+    const { login } = useCustomerAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -53,16 +54,17 @@ export default function CustomerLoginPage() {
 
             const { accessToken, customer } = responseData.data || responseData;
             console.log('Access token:', accessToken ? 'present' : 'missing');
-            console.log('Customer:', customer);
+            if (!accessToken || !customer) {
+                throw new Error('Invalid response from server');
+            }
 
-            // Store token and customer data using auth utilities
-            setCustomerToken(accessToken, data.rememberMe);
-            setCustomerData(customer, data.rememberMe);
+            // Use CustomerContext login function to update state and storage
+            login(accessToken, customer, data.rememberMe);
 
-            console.log('Data stored, redirecting...');
+            console.log('Login successful, redirecting...');
 
-            // Force redirect using window.location instead of router
-            window.location.href = '/customer/dashboard';
+            // Use router.push for client-side navigation (context is already updated)
+            router.push('/customer/dashboard');
         } catch (err) {
             console.error('Login error:', err);
             setError(err instanceof Error ? err.message : 'Login failed. Please try again.');

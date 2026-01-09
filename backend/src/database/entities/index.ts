@@ -22,3 +22,12 @@ export * from './bill.entity';
 export * from './bill-detail.entity';
 export * from './bill-tax.entity';
 export * from './payment.entity';
+
+// Payroll related entities
+export * from './payroll-run.entity';
+export * from './payslip.entity';
+export * from './payslip-component.entity';
+export * from './salary-component-type.entity';
+
+// Employee role entities
+export * from './meter-reader.entity';

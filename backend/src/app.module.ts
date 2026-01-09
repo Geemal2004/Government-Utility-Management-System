@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './auth/auth.module';
 import { EmployeesModule } from './employees/employees.module';
+import { DepartmentModule } from './departments/department.module';
 import { CustomersModule } from './customers/customers.module';
 import { ConnectionsModule } from './connections/connections.module';
 import { LookupModule } from './lookup/lookup.module';
@@ -13,6 +14,7 @@ import { BillingModule } from './billing/billing.module';
 import { StripeModule } from './stripe/stripe.module';
 import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { PayrollModule } from './payroll/payroll.module';
 
 @Module({
   imports: [
@@ -64,6 +66,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     DatabaseModule,
     AuthModule,
     EmployeesModule,
+    DepartmentModule,
     CustomersModule,
     ConnectionsModule,
     LookupModule,
@@ -74,6 +77,9 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     StripeModule, // Global Stripe client
     PaymentsModule, // Payment processing
     WebhooksModule, // Stripe webhooks
+
+    // Payroll module
+    PayrollModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

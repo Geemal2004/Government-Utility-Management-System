@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { UtilityType } from './utility-type.entity';
 
 /**
  * Department entity mapping to the Department table in SQL Server
@@ -13,4 +14,9 @@ export class Department {
 
   @Column({ name: 'utility_type_id', type: 'bigint' })
   utilityTypeId: number;
+
+  @ManyToOne(() => UtilityType)
+  @JoinColumn({ name: 'utility_type_id' })
+  utilityType: UtilityType;
 }
+
