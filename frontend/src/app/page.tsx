@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Zap, Droplets, Flame, Users, Briefcase, ArrowRight } from "lucide-react";
 
 export default function Home() {
@@ -77,12 +78,12 @@ export default function Home() {
                 </button>
                 <p className="text-sm text-gray-500 mt-4 text-center">
                   New customer?{" "}
-                  <a
+                  <Link
                     href="/customer/register"
                     className="text-primary-600 hover:text-primary-700 font-medium"
                   >
                     Register here
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>
