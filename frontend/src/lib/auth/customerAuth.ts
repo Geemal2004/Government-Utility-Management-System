@@ -84,7 +84,7 @@ export function removeCustomerToken(): void {
     
     // Remove cookie by setting max-age to 0 (use same security flags for proper cleanup)
     const securityFlags = getCookieSecurityFlags();
-    document.cookie = `customerToken=${securityFlags}; max-age=0`;
+    document.cookie = `customerToken=;${securityFlags}; max-age=0`;
 }
 
 /**
