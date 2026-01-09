@@ -24,9 +24,13 @@ export * from './bill-tax.entity';
 export * from './payment.entity';
 
 // Inventory related entities (placeholders for Phase 9)
+export * from './item-category.entity';
 export * from './item.entity';
 export * from './warehouse.entity';
+export * from './warehouse-stock.entity';
 export * from './stock-transaction.entity';
+export * from './item-stock-transaction.entity';
+export * from './site-storage-location.entity';
 
 // Work Orders & Maintenance related entities (Phase 8)
 export * from './asset.entity';

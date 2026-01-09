@@ -18,6 +18,7 @@ import { AssetsModule } from './assets/assets.module';
 import { WorkOrdersModule } from './work-orders/work-orders.module';
 import { ComplaintsModule } from './complaints/complaints.module';
 import { PayrollModule } from './payroll/payroll.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -88,6 +89,9 @@ import { PayrollModule } from './payroll/payroll.module';
 
     // Payroll module
     PayrollModule,
+
+    // Phase 9: Inventory & Warehouse Management
+    InventoryModule,
   ],
 })
 export class AppModule { }
