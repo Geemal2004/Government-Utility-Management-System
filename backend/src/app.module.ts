@@ -13,6 +13,7 @@ import { BillingModule } from './billing/billing.module';
 import { StripeModule } from './stripe/stripe.module';
 import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { CustomerApiModule } from './customer-api/customer-api.module';
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
       useFactory: (configService: ConfigService) => ({
         type: 'mssql',
         host: configService.get<string>('DB_HOST', 'localhost'),
-        port: configService.get<number>('DB_PORT', 1433),
+        port: parseInt(configService.get<string>('DB_PORT', '1433'), 10),
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE', 'UtilityManagementDB'),
@@ -74,6 +75,9 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     StripeModule, // Global Stripe client
     PaymentsModule, // Payment processing
     WebhooksModule, // Stripe webhooks
+    
+    // Customer Portal API
+    CustomerApiModule,
   ],
 })
 export class AppModule {}

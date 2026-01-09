@@ -57,29 +57,32 @@ function CustomerDashboardPage() {
     const fetchDashboardData = async () => {
         setIsLoading(true);
         try {
+            const API_BASE = 'http://localhost:3001/api/v1';
+
             // Fetch unpaid bills
-            const billsResponse = await fetch('/api/v1/payments/customer/my-bills', {
+            const billsResponse = await fetch(`${API_BASE}/customer/my-bills`, {
                 headers: getCustomerAuthHeader(),
             });
 
             if (billsResponse.ok) {
                 const billsData = await billsResponse.json();
-                setUnpaidBills(billsData.bills?.slice(0, 5) || []);
+                const bills = billsData.data?.bills || billsData.bills || [];
+                setUnpaidBills(bills.slice(0, 5));
                 setAccountSummary({
-                    totalOutstanding: billsData.totalOutstanding || 0,
-                    unpaidBillCount: billsData.unpaidBillCount || 0,
-                    nextDueDate: billsData.bills?.[0]?.dueDate || null,
+                    totalOutstanding: billsData.data?.totalOutstanding || billsData.totalOutstanding || 0,
+                    unpaidBillCount: billsData.data?.unpaidBillCount || billsData.unpaidBillCount || 0,
+                    nextDueDate: bills[0]?.dueDate || null,
                 });
             }
 
             // Fetch recent payments
-            const paymentsResponse = await fetch('/api/v1/payments/customer/history?limit=3', {
+            const paymentsResponse = await fetch(`${API_BASE}/customer/payments/history?limit=3`, {
                 headers: getCustomerAuthHeader(),
             });
 
             if (paymentsResponse.ok) {
                 const paymentsData = await paymentsResponse.json();
-                setRecentPayments(paymentsData || []);
+                setRecentPayments(paymentsData.data || paymentsData || []);
             }
         } catch (error) {
             console.error('Failed to fetch dashboard data:', error);

@@ -5,6 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { CustomerLoginDto } from './dto/customer-login.dto';
 import { CustomerLoginResponseDto } from './dto/customer-login-response.dto';
+import { CustomerRegisterDto } from './dto/customer-register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ApiResponseDto } from '../common/dto/api-response.dto';
 import { EmployeeResponseDto } from '../employees/dto/employee-response.dto';
@@ -44,6 +45,25 @@ export class AuthController {
   })
   async customerLogin(@Body() loginDto: CustomerLoginDto): Promise<CustomerLoginResponseDto> {
     return await this.authService.customerLogin(loginDto);
+  }
+
+  @Post('customer/register')
+  @ApiOperation({ summary: 'Customer self-registration' })
+  @ApiBody({ type: CustomerRegisterDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Customer registered successfully',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Email or identity reference already exists',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation failed',
+  })
+  async customerRegister(@Body() registerDto: CustomerRegisterDto) {
+    return await this.authService.registerCustomer(registerDto);
   }
 
   @Get('profile')

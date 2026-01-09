@@ -9,10 +9,13 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { EmployeesModule } from '../employees/employees.module';
 import { CustomersModule } from '../customers/customers.module';
 import { Customer } from '../database/entities/customer.entity';
+import { CustomerAddress } from '../database/entities/customer-address.entity';
+import { CustomerPhone } from '../database/entities/customer-phone.entity';
+import { PostalCode } from '../database/entities/postal-code.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Customer]),
+    TypeOrmModule.forFeature([Customer, CustomerAddress, CustomerPhone, PostalCode]),
     EmployeesModule,
     CustomersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),

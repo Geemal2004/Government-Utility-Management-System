@@ -1,16 +1,20 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { EmployeesService } from '../employees/employees.service';
 import { LoginDto } from './dto/login.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { CustomerLoginDto } from './dto/customer-login.dto';
 import { CustomerLoginResponseDto } from './dto/customer-login-response.dto';
+import { CustomerRegisterDto } from './dto/customer-register.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { Employee } from '../database/entities/employee.entity';
 import { Customer } from '../database/entities/customer.entity';
+import { CustomerAddress } from '../database/entities/customer-address.entity';
+import { CustomerPhone } from '../database/entities/customer-phone.entity';
+import { PostalCode } from '../database/entities/postal-code.entity';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +23,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(CustomerAddress)
+    private readonly customerAddressRepository: Repository<CustomerAddress>,
+    @InjectRepository(CustomerPhone)
+    private readonly customerPhoneRepository: Repository<CustomerPhone>,
+    @InjectRepository(PostalCode)
+    private readonly postalCodeRepository: Repository<PostalCode>,
+    private dataSource: DataSource,
   ) { }
 
   /**
@@ -181,5 +192,105 @@ export class AuthService {
     }
 
     return customer;
+  }
+
+  /**
+   * Register a new customer (public endpoint)
+   * @param registerDto - Customer registration data
+   * @returns Newly created customer info
+   */
+  async registerCustomer(registerDto: CustomerRegisterDto): Promise<{
+    customerId: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    message: string;
+  }> {
+    // Check if email already exists
+    const existingEmail = await this.customerRepository.findOne({
+      where: { email: registerDto.email },
+    });
+
+    if (existingEmail) {
+      throw new ConflictException('Email already registered');
+    }
+
+    // Check if identity ref already exists
+    const existingIdentity = await this.customerRepository.findOne({
+      where: { identityRef: registerDto.identityRef },
+    });
+
+    if (existingIdentity) {
+      throw new ConflictException('Identity reference already registered');
+    }
+
+    // Validate postal code exists
+    const postalCode = registerDto.postalCode || '10100'; // Default to Negombo
+    const validPostalCode = await this.postalCodeRepository.findOne({
+      where: { postalCode },
+    });
+
+    if (!validPostalCode) {
+      throw new BadRequestException(`Invalid postal code: ${postalCode}. Please provide a valid Sri Lankan postal code.`);
+    }
+
+    // Use transaction to create address and customer
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Create address
+      const address = this.customerAddressRepository.create({
+        line1: registerDto.address,
+        postalCode: postalCode,
+      });
+      const savedAddress = await queryRunner.manager.save(address);
+
+      // Hash password
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(registerDto.password, saltRounds);
+
+      // Create customer
+      const customer = this.customerRepository.create({
+        firstName: registerDto.firstName,
+        middleName: registerDto.middleName || null,
+        lastName: registerDto.lastName,
+        email: registerDto.email,
+        passwordHash,
+        customerAddressId: savedAddress.customerAddressId,
+        customerType: registerDto.customerType || 'RESIDENTIAL',
+        registrationDate: new Date(),
+        identityType: registerDto.identityType || 'NIC',
+        identityRef: registerDto.identityRef,
+        employeeId: null, // Self-registration, no employee
+        tariffCategoryId: null,
+      });
+      const savedCustomer = await queryRunner.manager.save(customer);
+
+      // Create phone number if provided
+      if (registerDto.phoneNumber) {
+        const phone = this.customerPhoneRepository.create({
+          customerId: savedCustomer.customerId,
+          phone: registerDto.phoneNumber,
+        });
+        await queryRunner.manager.save(phone);
+      }
+
+      await queryRunner.commitTransaction();
+
+      return {
+        customerId: savedCustomer.customerId,
+        firstName: savedCustomer.firstName,
+        lastName: savedCustomer.lastName,
+        email: savedCustomer.email || '',
+        message: 'Registration successful. You can now login.',
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
